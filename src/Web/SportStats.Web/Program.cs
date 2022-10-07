@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using SportStats.Web.Data;
-using SportStats.Web.Services;
 
 public class Program
 {
@@ -26,8 +25,6 @@ public class Program
         services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>();
         services.AddRazorPages();
-
-        services.AddTransient<IUsersService, UsersService>();
     }
 
     private static void Configure(WebApplication app)
