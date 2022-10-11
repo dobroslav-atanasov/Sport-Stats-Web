@@ -22,4 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\SportStats.Common.Constants\SportStats.Common.Constants.csproj" />
+  </ItemGroup>
+
 </Project>

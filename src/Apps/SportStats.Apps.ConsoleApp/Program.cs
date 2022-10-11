@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.Configuration;
 
+using SportStats.
 public class Program
 {
     public static async Task Main(string[] args)
@@ -13,5 +14,8 @@ public class Program
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile()
+            .Build();
+
+        return configuration;
     }
 }
