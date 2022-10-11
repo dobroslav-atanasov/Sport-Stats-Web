@@ -2,7 +2,8 @@
 
 using Microsoft.Extensions.Configuration;
 
-using SportStats.
+using SportStats.Common.Constants;
+
 public class Program
 {
     public static async Task Main(string[] args)
@@ -13,7 +14,7 @@ public class Program
     private static IConfiguration SetupConfiguration()
     {
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile()
+            .AddJsonFile(AppGlobalConstants.APP_SETTINGS_FILE, false, true)
             .Build();
 
         return configuration;
