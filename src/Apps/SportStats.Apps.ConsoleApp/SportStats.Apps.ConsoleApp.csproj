@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -27,7 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <None Update="appsettings.json">
+=======
+    <None Update="log4net.config">
+>>>>>>> 698d0b3b81584a45ba55ca9a7f6029e7dabad6d0
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
