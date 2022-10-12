@@ -26,4 +26,10 @@
     <ProjectReference Include="..\..\Common\SportStats.Common.Constants\SportStats.Common.Constants.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
