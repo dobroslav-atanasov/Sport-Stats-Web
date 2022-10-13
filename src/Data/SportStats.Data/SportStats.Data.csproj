@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SportStats.Data.Models\SportStats.Data.Models.csproj" />
+  </ItemGroup>
+
 </Project>
