@@ -42,6 +42,9 @@ public class Program
         });
 
         // DATABASES
+        var crawlerDbContextOptions = new DbContextOptionsBuilder<CrawlerDbContext>()
+    .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_NEW_CONNECTION_STRING))
+    .Options;
 
         // ENGINE
         services.AddScoped<Engine>();
