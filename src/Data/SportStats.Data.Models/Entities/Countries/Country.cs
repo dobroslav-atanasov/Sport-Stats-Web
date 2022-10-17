@@ -3,12 +3,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Countries")]
-public class Country
-{
-    [Key]
-    public int Id { get; set; }
+using SportStats.Data.Common.Models;
 
+[Table("Countries")]
+public class Country : BaseModel<int>
+{
     [Required]
     [MaxLength(10)]
     public string Alpha2Code { get; set; }
