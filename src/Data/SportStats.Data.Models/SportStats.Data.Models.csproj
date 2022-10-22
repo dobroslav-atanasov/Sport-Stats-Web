@@ -6,4 +6,8 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SportStats.Data.Common\SportStats.Data.Common.csproj" />
+  </ItemGroup>
+
 </Project>
