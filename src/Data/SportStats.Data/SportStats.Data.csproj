@@ -24,4 +24,11 @@
     <ProjectReference Include="..\SportStats.Data.Models\SportStats.Data.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Seeding\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
