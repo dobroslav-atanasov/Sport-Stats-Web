@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Services\SportStats.Services.Data\SportStats.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\SportStats.Services\SportStats.Services.csproj" />
+    <ProjectReference Include="..\SportStats.Common.Constants\SportStats.Common.Constants.csproj" />
+  </ItemGroup>
+
 </Project>
