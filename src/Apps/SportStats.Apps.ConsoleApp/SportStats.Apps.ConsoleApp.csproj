@@ -23,7 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\SportStats.Common.Constants\SportStats.Common.Constants.csproj" />
+    <ProjectReference Include="..\..\Common\SportStats.Common.Converters\SportStats.Common.Converters.csproj" />
+    <ProjectReference Include="..\..\Common\SportStats.Common.Crawlers\SportStats.Common.Crawlers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
