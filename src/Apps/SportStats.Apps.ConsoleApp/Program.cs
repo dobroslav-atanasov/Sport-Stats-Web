@@ -1,10 +1,12 @@
 ﻿namespace SportStats.Apps.ConsoleApp;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
+using SportStats.Data.Contexts;
 
 public class Program
 {
@@ -41,10 +43,13 @@ public class Program
             config.AddLog4Net(configuration.GetSection(AppGlobalConstants.LOG4NET_CORE).Get<Log4NetProviderOptions>());
         });
 
+        // AUTOMAPPER
+        //MapperConfig.RegisterMapper(typeof().GetTypeInfo().Assembly);
+
         // DATABASES
         var crawlerDbContextOptions = new DbContextOptionsBuilder<CrawlerDbContext>()
-    .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_NEW_CONNECTION_STRING))
-    .Options;
+            .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_NEW_CONNECTION_STRING))
+            .Options;
 
         // ENGINE
         services.AddScoped<Engine>();
