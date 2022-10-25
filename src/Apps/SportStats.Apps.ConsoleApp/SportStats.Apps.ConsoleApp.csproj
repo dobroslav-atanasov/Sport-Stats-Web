@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\SportStats.Common.Converters\SportStats.Common.Converters.csproj" />
     <ProjectReference Include="..\..\Common\SportStats.Common.Crawlers\SportStats.Common.Crawlers.csproj" />
+    <ProjectReference Include="..\..\Services\SportStats.Services.Mapper\SportStats.Services.Mapper.csproj" />
   </ItemGroup>
 
   <ItemGroup>
