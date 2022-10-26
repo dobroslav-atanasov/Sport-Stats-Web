@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
 using SportStats.Data.Contexts;
+using SportStats.Services;
+using SportStats.Services.Interfaces;
 
 public class Program
 {
@@ -51,8 +53,23 @@ public class Program
             .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_NEW_CONNECTION_STRING))
             .Options;
 
+        var sportStatsDbContextOptions = new DbContextOptionsBuilder<SportStatsDbContext>()
+            .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.SPORT_STATS_CONNECTION_STRING))
+            .UseLazyLoadingProxies()
+            .Options;
+
         // ENGINE
         services.AddScoped<Engine>();
+
+        // REPOSITORIES
+
+        // SERVICES
+        services.AddScoped<IHttpService, HttpService>();
+        services.AddScoped<IZipService, ZipService>();
+
+        // CRAWLERS
+
+        // CONVERTERS
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;
