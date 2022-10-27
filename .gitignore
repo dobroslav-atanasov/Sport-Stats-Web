@@ -355,3 +355,4 @@ src/Web/SportStats.Web/Properties/serviceDependencies.local.json
 src/Web/SportStats.Web/appsettings.Development.json
 src/Web/SportStats.Web/appsettings.json
 src/Apps/SportStats.Apps.ConsoleApp/appsettings.json
+src/Data/SportStats.Data/Migrations
