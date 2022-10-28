@@ -26,6 +26,13 @@ public class Program
         var configuration = SetupConfiguration();
         var services = ConfigServices(configuration);
 
+        // MIGRATIONS
+        var crawlerStorageDbContext = services.GetRequiredService<CrawlerStorageDbContext>();
+        crawlerStorageDbContext.Database.Migrate();
+
+        var sportStatsDbContext = services.GetRequiredService<SportStatsDbContext>();
+        sportStatsDbContext.Database.Migrate();
+
         var engine = services.GetService<Engine>();
         if (engine != null)
         {
@@ -58,20 +65,17 @@ public class Program
         MapperConfig.RegisterMapper(Assembly.Load(AppGlobalConstants.AUTOMAPPER_MODELS_ASSEMBLY));
 
         // DATABASES
-        var crawlerDbContextOptions = new DbContextOptionsBuilder<CrawlerStorageDbContext>()
-            .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_STORAGE_CONNECTION_STRING))
-            .Options;
+        services.AddDbContext<CrawlerStorageDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_STORAGE_CONNECTION_STRING));
+            options.UseLazyLoadingProxies();
+        });
 
-        var crawlerStorageDbContext = new CrawlerStorageDbContext(crawlerDbContextOptions);
-        services.AddSingleton(crawlerStorageDbContext);
-
-        var sportStatsDbContextOptions = new DbContextOptionsBuilder<SportStatsDbContext>()
-            .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.SPORT_STATS_CONNECTION_STRING))
-            .UseLazyLoadingProxies()
-            .Options;
-
-        var sportStatsDbContext = new SportStatsDbContext(sportStatsDbContextOptions);
-        services.AddSingleton(sportStatsDbContext);
+        services.AddDbContext<SportStatsDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.SPORT_STATS_CONNECTION_STRING));
+            options.UseLazyLoadingProxies();
+        });
 
         // ENGINE
         services.AddScoped<Engine>();
