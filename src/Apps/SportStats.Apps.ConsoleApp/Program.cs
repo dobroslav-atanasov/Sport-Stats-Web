@@ -86,10 +86,13 @@ public class Program
         // SERVICES
         services.AddScoped<IHttpService, HttpService>();
         services.AddScoped<IZipService, ZipService>();
+        services.AddScoped<IMD5Hash, MD5Hash>();
 
         // SERVICES DATA
         services.AddScoped<ICrawlersService, CrawlersService>();
         services.AddScoped<IOperationsService, OperationsService>();
+        services.AddScoped<IGroupsService, GroupsService>();
+        services.AddScoped<ILogsService, LogsService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
