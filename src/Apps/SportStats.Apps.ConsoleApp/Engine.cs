@@ -22,7 +22,7 @@ internal class Engine
         await crawlerStorageSeeder.SeedAsync();
 
         // CRAWLERS
-        //await this.crawlerManager.RunWorldCountryCrawlers();
+        await this.crawlerManager.RunWorldCountryCrawlers();
 
         // CONVERTERS
     }
