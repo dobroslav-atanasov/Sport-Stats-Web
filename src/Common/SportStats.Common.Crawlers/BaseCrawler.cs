@@ -43,6 +43,20 @@ public abstract class BaseCrawler
         await this.groupsService.AddOrUpdateGroupAsync(group);
     }
 
+    protected async Task ProcessGroupAsync(HttpModel httpModel, ICollection<Document> documents)
+    {
+        var name = this.GetNameFromUrl(httpModel);
+
+        var group = new Group
+        {
+            Name = name,
+            CrawlerId = this.crawlerId.Value,
+            Documents = documents
+        };
+
+        await this.groupsService.AddOrUpdateGroupAsync(group);
+    }
+
     protected Document CreateDocument(HttpModel httpModel)
     {
         var name = this.GetNameFromUrl(httpModel);
