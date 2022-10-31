@@ -99,6 +99,7 @@ public class Program
         services.AddTransient<CrawlerManager>();
         services.AddTransient<WorldCountryCrawler>();
         services.AddTransient<NOCCrawler>();
+        services.AddTransient<GameCrawler>();
 
         // CONVERTERS
 
