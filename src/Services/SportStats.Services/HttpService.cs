@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using HtmlAgilityPack;
 
+using SportStats.Common.Constants;
 using SportStats.Data.Models.Http;
 using SportStats.Services.Interfaces;
 
@@ -21,19 +22,22 @@ public class HttpService : IHttpService
         return bytes;
     }
 
-    public async Task<HttpModel> GetAsync(string url)
+    public async Task<HttpModel> GetAsync(string url, bool isOlympediaUrl)
     {
         using var handler = new HttpClientHandler();
         using var client = new HttpClient(handler);
 
         var response = await client.GetAsync(url);
-        var responseAsString = await response.Content.ReadAsStringAsync();
-
-        while (responseAsString == "Rate Limit Exceeded")
+        if (isOlympediaUrl)
         {
-            await Task.Delay(3000);
-            response = await client.GetAsync(url);
-            responseAsString = await response.Content.ReadAsStringAsync();
+            var responseAsString = await response.Content.ReadAsStringAsync();
+
+            while (responseAsString == "Rate Limit Exceeded")
+            {
+                await Task.Delay(3000);
+                response = await client.GetAsync(url);
+                responseAsString = await response.Content.ReadAsStringAsync();
+            }
         }
 
         if (response != null)
@@ -77,6 +81,17 @@ public class HttpService : IHttpService
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(httpModel.Content);
             httpModel.HtmlDocument = htmlDocument;
+        }
+
+        if (url.StartsWith(CrawlerConstants.OLYMPEDIA_MAIN_URL))
+        {
+            httpModel.Content = httpModel
+                .HtmlDocument
+                .DocumentNode
+                .SelectSingleNode("//div[@class='container']")
+                .OuterHtml;
+
+            httpModel.HtmlDocument.LoadHtml(httpModel.Content);
         }
 
         httpModel.Encoding = Encoding.UTF8;
