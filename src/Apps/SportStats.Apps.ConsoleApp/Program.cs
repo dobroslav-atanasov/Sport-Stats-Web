@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SportStats.Common.Constants;
 using SportStats.Common.Crawlers;
 using SportStats.Common.Crawlers.Countries;
+using SportStats.Common.Crawlers.Olympedia;
 using SportStats.Data.Contexts;
 using SportStats.Data.Seeders;
 using SportStats.Data.Seeders.Interfaces;
@@ -97,6 +98,7 @@ public class Program
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
         services.AddTransient<WorldCountryCrawler>();
+        services.AddTransient<NOCCrawler>();
 
         // CONVERTERS
 
