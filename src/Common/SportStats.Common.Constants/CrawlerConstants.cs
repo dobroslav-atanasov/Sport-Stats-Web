@@ -12,4 +12,5 @@ public static class CrawlerConstants
     public const string OLYMPEDIA_MAIN_URL = "https://www.olympedia.org/";
     public const string OLYMPEDIA_NOC_URL = "https://www.olympedia.org/countries";
     public const string OLYMPEDIA_GAMES_URL = "https://www.olympedia.org/editions";
+    public const string OLYMPEDIA_SPORTS_URL = "https://www.olympedia.org/sports";
 }

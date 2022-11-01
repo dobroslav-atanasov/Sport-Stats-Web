@@ -100,6 +100,7 @@ public class Program
         services.AddTransient<WorldCountryCrawler>();
         services.AddTransient<NOCCrawler>();
         services.AddTransient<GameCrawler>();
+        services.AddTransient<SportDisciplineCrawler>();
 
         // CONVERTERS
 
