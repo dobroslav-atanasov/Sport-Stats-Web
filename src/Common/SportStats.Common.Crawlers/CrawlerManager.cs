@@ -9,19 +9,19 @@ public class CrawlerManager
 	private readonly NOCCrawler olympediaNOCCrawler;
 	private readonly GameCrawler olympediaGameCrawler;
 	private readonly SportDisciplineCrawler olympediaSportDisciplineCrawler;
-	private readonly EventCrawler olympediaEventCrawler;
+	private readonly ResultCrawler olympediaResultCrawler;
 
 	public CrawlerManager(WorldCountryCrawler worldCountryCrawler,
 		NOCCrawler olympediaNOCCrawler,
 		GameCrawler olympediaGameCrawler,
 		SportDisciplineCrawler olympediaSportDisciplineCrawler,
-		EventCrawler olympediaEventCrawler)
+		ResultCrawler olympediaResultCrawler)
 	{
 		this.worldCountryCrawler = worldCountryCrawler;
 		this.olympediaNOCCrawler = olympediaNOCCrawler;
 		this.olympediaGameCrawler = olympediaGameCrawler;
 		this.olympediaSportDisciplineCrawler = olympediaSportDisciplineCrawler;
-		this.olympediaEventCrawler = olympediaEventCrawler;
+		this.olympediaResultCrawler = olympediaResultCrawler;
 	}
 
 	public async Task RunWorldCountryCrawlers()
@@ -30,6 +30,6 @@ public class CrawlerManager
 		//await this.olympediaNOCCrawler.StartAsync();
 		//await this.olympediaGameCrawler.StartAsync();
 		//await this.olympediaSportDisciplineCrawler.StartAsync();
-		await this.olympediaEventCrawler.StartAsync();
+		await this.olympediaResultCrawler.StartAsync();
 	}
 }

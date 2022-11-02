@@ -73,4 +73,64 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
 
         return disciplineUrls;
     }
+
+    protected IReadOnlyCollection<string> GetMedalDisciplineUrls(HttpModel httpModel)
+    {
+        var medalTable = httpModel
+            .HtmlDocument
+            .DocumentNode
+            .SelectNodes("//table[@class='table table-striped']")
+            .FirstOrDefault()
+            .OuterHtml;
+
+        //var medalTable = RegexHelper.ExtractFirstGroup(httpModel.HtmlDocument.DocumentNode.OuterHtml, @"<h2>Medals<\/h2>\s*<table class=(?:'|"")table table-striped(?:'|"")>(.*?)<\/table>");
+        if (medalTable != null)
+        {
+            var document = new HtmlDocument();
+            document.LoadHtml(medalTable);
+
+            var url = document
+                .DocumentNode
+                .SelectNodes("//a")
+                .Select(x => x.Attributes["href"]?.Value.Trim())
+                .Where(x => x.StartsWith("/results/"))
+                .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+                .Distinct()
+                .ToList();
+
+            return url;
+        }
+
+        return null;
+    }
+
+    protected IReadOnlyCollection<string> ExtractResultUrls(HttpModel httpModel)
+    {
+        var urls = httpModel
+            .HtmlDocument
+            .DocumentNode
+            .SelectNodes("//table//a")
+            .Select(x => x.Attributes["href"]?.Value.Trim())
+            .Where(x => x.StartsWith("/results/"))
+            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Distinct()
+            .ToList();
+
+        var additionalUrls = httpModel
+            .HtmlDocument
+            .DocumentNode
+            .SelectNodes("//form[@class='form-inline']//option")?
+            .Select(x => x.Attributes["value"]?.Value.Trim())
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Select(x => this.CreateUrl($"/results/{x}", CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Distinct()
+            .ToList();
+
+        if (additionalUrls != null && additionalUrls.Count > 0)
+        {
+            urls.AddRange(additionalUrls);
+        }
+
+        return urls;
+    }
 }
