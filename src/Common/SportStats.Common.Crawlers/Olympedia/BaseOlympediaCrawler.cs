@@ -45,4 +45,32 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
 
         return urls;
     }
+
+    protected IReadOnlyCollection<string> ExtractOlympediaDisciplineUrls(HttpModel httpModel)
+    {
+        var table = httpModel
+            .HtmlDocument
+            .DocumentNode
+            .SelectNodes("//table[@class='table table-striped']")?
+            .FirstOrDefault();
+
+        if (table == null)
+        {
+            return null;
+        }
+
+        var document = new HtmlDocument();
+        document.LoadHtml(table.OuterHtml);
+
+        var disciplineUrls = document
+            .DocumentNode
+            .SelectNodes("//a")
+            .Select(x => x.Attributes["href"]?.Value)
+            .Where(x => x != null)
+            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Distinct()
+            .ToList();
+
+        return disciplineUrls;
+    }
 }
