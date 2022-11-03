@@ -88,7 +88,7 @@ public class HttpService : IHttpService
             httpModel.Content = httpModel
                 .HtmlDocument
                 .DocumentNode
-                .SelectSingleNode("//div[@class='container']")
+                .SelectSingleNode("//div[@class='container']")?
                 .OuterHtml;
 
             httpModel.HtmlDocument.LoadHtml(httpModel.Content);
