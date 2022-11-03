@@ -51,7 +51,7 @@ public class AthleteCrawler : BaseOlympediaCrawler
                                         try
                                         {
                                             var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
-                                            //await this.ProcessGroupAsync(athleteHttpModel);
+                                            await this.ProcessGroupAsync(athleteHttpModel);
                                         }
                                         catch (Exception ex)
                                         {
@@ -72,7 +72,7 @@ public class AthleteCrawler : BaseOlympediaCrawler
                                                 try
                                                 {
                                                     var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
-                                                    //await this.ProcessGroupAsync(athleteHttpModel);
+                                                    await this.ProcessGroupAsync(athleteHttpModel);
                                                 }
                                                 catch (Exception ex)
                                                 {

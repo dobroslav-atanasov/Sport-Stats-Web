@@ -56,18 +56,25 @@ public class ResultCrawler : BaseOlympediaCrawler
 
                                         foreach (var resultUrl in resultUrls)
                                         {
-                                            var resultHttpModel = await this.HttpService.GetAsync(resultUrl);
-                                            var document = this.CreateDocument(resultHttpModel);
-                                            document.Order = order;
-                                            order++;
-                                            documents.Add(document);
+                                            try
+                                            {
+                                                var resultHttpModel = await this.HttpService.GetAsync(resultUrl);
+                                                var document = this.CreateDocument(resultHttpModel);
+                                                document.Order = order;
+                                                order++;
+                                                documents.Add(document);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                this.Logger.LogError(ex, $"Failed to process data: {resultUrl};");
+                                            }
                                         }
 
                                         await this.ProcessGroupAsync(mainResultHttpModel, documents);
                                     }
                                     catch (Exception ex)
                                     {
-                                        this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                                        this.Logger.LogError(ex, $"Failed to process data: {medalDisciplineUrl};");
                                     }
                                 }
                             }
