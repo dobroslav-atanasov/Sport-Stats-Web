@@ -32,46 +32,49 @@ public class ResultCrawler : BaseOlympediaCrawler
                     var gameHttpModel = await this.HttpService.GetAsync(gameUrl);
                     var disciplineUrls = this.ExtractOlympediaDisciplineUrls(gameHttpModel);
 
-                    foreach (var disciplineUrl in disciplineUrls)
+                    if (disciplineUrls != null && disciplineUrls.Count > 0)
                     {
-                        try
+                        foreach (var disciplineUrl in disciplineUrls)
                         {
-                            var disciplineModel = await this.HttpService.GetAsync(disciplineUrl);
-                            var medalDisciplineUrls = this.GetMedalDisciplineUrls(disciplineModel);
-
-                            foreach (var medalDisciplineUrl in medalDisciplineUrls)
+                            try
                             {
-                                try
-                                {
-                                    var mainResultHttpModel = await this.HttpService.GetAsync(medalDisciplineUrl);
-                                    var resultUrls = this.ExtractResultUrls(mainResultHttpModel);
+                                var disciplineModel = await this.HttpService.GetAsync(disciplineUrl);
+                                var medalDisciplineUrls = this.GetMedalDisciplineUrls(disciplineModel);
 
-                                    var documents = new List<Document>
+                                foreach (var medalDisciplineUrl in medalDisciplineUrls)
+                                {
+                                    try
+                                    {
+                                        var mainResultHttpModel = await this.HttpService.GetAsync(medalDisciplineUrl);
+                                        var resultUrls = this.ExtractResultUrls(mainResultHttpModel);
+
+                                        var documents = new List<Document>
                                     {
                                         this.CreateDocument(mainResultHttpModel)
                                     };
-                                    var order = 2;
+                                        var order = 2;
 
-                                    foreach (var resultUrl in resultUrls)
-                                    {
-                                        var resultHttpModel = await this.HttpService.GetAsync(resultUrl);
-                                        var document = this.CreateDocument(resultHttpModel);
-                                        document.Order = order;
-                                        order++;
-                                        documents.Add(document);
+                                        foreach (var resultUrl in resultUrls)
+                                        {
+                                            var resultHttpModel = await this.HttpService.GetAsync(resultUrl);
+                                            var document = this.CreateDocument(resultHttpModel);
+                                            document.Order = order;
+                                            order++;
+                                            documents.Add(document);
+                                        }
+
+                                        await this.ProcessGroupAsync(mainResultHttpModel, documents);
                                     }
-
-                                    await this.ProcessGroupAsync(mainResultHttpModel, documents);
-                                }
-                                catch (Exception ex)
-                                {
-                                    this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                                    catch (Exception ex)
+                                    {
+                                        this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                                    }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                            catch (Exception ex)
+                            {
+                                this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                            }
                         }
                     }
                 }
