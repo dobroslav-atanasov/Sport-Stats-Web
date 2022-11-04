@@ -35,75 +35,78 @@ public class AthleteCrawler : BaseOlympediaCrawler
                     var gameHttpModel = await this.HttpService.GetAsync(gameUrl);
                     var disciplineUrls = this.ExtractOlympediaDisciplineUrls(gameHttpModel);
 
-                    foreach (var disciplineUrl in disciplineUrls)
+                    if (disciplineUrls != null && disciplineUrls.Count > 0)
                     {
-                        try
+                        foreach (var disciplineUrl in disciplineUrls)
                         {
-                            var disciplineModel = await this.HttpService.GetAsync(disciplineUrl);
-                            var medalDisciplineUrls = this.GetMedalDisciplineUrls(disciplineModel);
-
-                            foreach (var medalDisciplineUrl in medalDisciplineUrls)
+                            try
                             {
-                                try
-                                {
-                                    var mainResultHttpModel = await this.HttpService.GetAsync(medalDisciplineUrl);
-                                    var athletetUrls = this.ExtractAthleteUrls(mainResultHttpModel);
+                                var disciplineModel = await this.HttpService.GetAsync(disciplineUrl);
+                                var medalDisciplineUrls = this.GetMedalDisciplineUrls(disciplineModel);
 
-                                    foreach (var athleteUrl in athletetUrls)
+                                foreach (var medalDisciplineUrl in medalDisciplineUrls)
+                                {
+                                    try
                                     {
-                                        var number = Regex.Match(athleteUrl, @"athletes/(\d+)");
-                                        if (!groups.Contains($"athletes_{number.Groups[1].Value}.zip"))
+                                        var mainResultHttpModel = await this.HttpService.GetAsync(medalDisciplineUrl);
+                                        var athletetUrls = this.ExtractAthleteUrls(mainResultHttpModel);
+
+                                        foreach (var athleteUrl in athletetUrls)
                                         {
-                                            try
+                                            var number = Regex.Match(athleteUrl, @"athletes/(\d+)");
+                                            if (!groups.Contains($"athletes_{number.Groups[1].Value}.zip"))
                                             {
-                                                var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
-                                                groups.Add(athleteUrl);
-                                                await this.ProcessGroupAsync(athleteHttpModel);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                this.Logger.LogError(ex, $"Failed to download data: {athleteUrl};");
+                                                try
+                                                {
+                                                    var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
+                                                    groups.Add(athleteUrl);
+                                                    await this.ProcessGroupAsync(athleteHttpModel);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    this.Logger.LogError(ex, $"Failed to download data: {athleteUrl};");
+                                                }
                                             }
                                         }
-                                    }
 
-                                    var resultUrls = this.ExtractResultUrls(mainResultHttpModel);
-                                    foreach (var resultUrl in resultUrls)
-                                    {
-                                        var resultHttpModel = await this.HttpService.GetAsync(resultUrl);
-                                        athletetUrls = this.ExtractAthleteUrls(resultHttpModel);
-
-                                        if (athletetUrls != null)
+                                        var resultUrls = this.ExtractResultUrls(mainResultHttpModel);
+                                        foreach (var resultUrl in resultUrls)
                                         {
-                                            foreach (var athleteUrl in athletetUrls)
+                                            var resultHttpModel = await this.HttpService.GetAsync(resultUrl);
+                                            athletetUrls = this.ExtractAthleteUrls(resultHttpModel);
+
+                                            if (athletetUrls != null)
                                             {
-                                                var number = Regex.Match(athleteUrl, @"athletes/(\d+)");
-                                                if (!groups.Contains($"athletes_{number.Groups[1].Value}.zip"))
+                                                foreach (var athleteUrl in athletetUrls)
                                                 {
-                                                    try
+                                                    var number = Regex.Match(athleteUrl, @"athletes/(\d+)");
+                                                    if (!groups.Contains($"athletes_{number.Groups[1].Value}.zip"))
                                                     {
-                                                        var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
-                                                        groups.Add(athleteUrl);
-                                                        await this.ProcessGroupAsync(athleteHttpModel);
-                                                    }
-                                                    catch (Exception ex)
-                                                    {
-                                                        this.Logger.LogError(ex, $"Failed to process data: {athleteUrl};");
+                                                        try
+                                                        {
+                                                            var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
+                                                            groups.Add(athleteUrl);
+                                                            await this.ProcessGroupAsync(athleteHttpModel);
+                                                        }
+                                                        catch (Exception ex)
+                                                        {
+                                                            this.Logger.LogError(ex, $"Failed to process data: {athleteUrl};");
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                                    catch (Exception ex)
+                                    {
+                                        this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                                    }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                            catch (Exception ex)
+                            {
+                                this.Logger.LogError(ex, $"Failed to process data: {disciplineUrl};");
+                            }
                         }
                     }
                 }
