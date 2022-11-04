@@ -51,8 +51,8 @@ public class AthleteCrawler : BaseOlympediaCrawler
 
                                     foreach (var athleteUrl in athletetUrls)
                                     {
-                                        var number = Regex.Match(athleteUrl, @"([\d+])");
-                                        if (!groups.Contains($"athlete_{number.Groups[1].Value}.zip"))
+                                        var number = Regex.Match(athleteUrl, @"athletes/(\d+)");
+                                        if (!groups.Contains($"athletes_{number.Groups[1].Value}.zip"))
                                         {
                                             try
                                             {
