@@ -11,4 +11,6 @@ public interface IGroupsService
     Task AddGroupAsync(Group group);
 
     Task UpdateGroupAsync(Group newGroup, Group oldGroup);
+
+    Task<IList<string>> GetGroupNamesAsync(int crawlerId);
 }

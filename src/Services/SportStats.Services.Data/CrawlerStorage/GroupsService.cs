@@ -1,5 +1,6 @@
 ﻿namespace SportStats.Services.Data.CrawlerStorage;
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -110,6 +111,17 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
             .FirstOrDefaultAsync(g => g.CrawlerId == crawlerId && g.Name == name);
 
         return group;
+    }
+
+    public async Task<IList<string>> GetGroupNamesAsync(int crawlerId)
+    {
+        var groups = await this.Context
+            .Groups
+            .Where(g => g.CrawlerId == crawlerId)
+            .Select(g => g.Name)
+            .ToListAsync();
+
+        return groups;
     }
 
     public async Task UpdateGroupAsync(Group newGroup, Group oldGroup)
