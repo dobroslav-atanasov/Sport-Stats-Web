@@ -10,21 +10,23 @@ using SportStats.Services.Interfaces;
 public abstract class BaseCrawler
 {
     private readonly ICrawlersService crawlersService;
-    private readonly IGroupsService groupsService;
-    private readonly Lazy<int> crawlerId;
 
     public BaseCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
     {
         this.Logger = logger;
         this.HttpService = httpService;
         this.crawlersService = crawlersService;
-        this.groupsService = groupsService;
-        this.crawlerId = new Lazy<int>(() => this.crawlersService.GetCrawlerIdAsync(this.GetType().FullName).GetAwaiter().GetResult());
+        this.GroupsService = groupsService;
+        this.CrawlerId = new Lazy<int>(() => this.crawlersService.GetCrawlerIdAsync(this.GetType().FullName).GetAwaiter().GetResult());
     }
 
     protected ILogger<BaseCrawler> Logger { get; }
 
     protected IHttpService HttpService { get; }
+
+    protected IGroupsService GroupsService { get; }
+
+    protected Lazy<int> CrawlerId { get; }
 
     public abstract Task StartAsync();
 
@@ -36,11 +38,11 @@ public abstract class BaseCrawler
         var group = new Group
         {
             Name = name,
-            CrawlerId = this.crawlerId.Value,
+            CrawlerId = this.CrawlerId.Value,
             Documents = new List<Document> { document }
         };
 
-        await this.groupsService.AddOrUpdateGroupAsync(group);
+        await this.GroupsService.AddOrUpdateGroupAsync(group);
     }
 
     protected async Task ProcessGroupAsync(HttpModel httpModel, ICollection<Document> documents)
@@ -50,11 +52,11 @@ public abstract class BaseCrawler
         var group = new Group
         {
             Name = name,
-            CrawlerId = this.crawlerId.Value,
+            CrawlerId = this.CrawlerId.Value,
             Documents = documents
         };
 
-        await this.groupsService.AddOrUpdateGroupAsync(group);
+        await this.GroupsService.AddOrUpdateGroupAsync(group);
     }
 
     protected Document CreateDocument(HttpModel httpModel)

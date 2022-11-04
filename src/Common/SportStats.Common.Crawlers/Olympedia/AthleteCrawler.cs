@@ -1,5 +1,7 @@
 ﻿namespace SportStats.Common.Crawlers.Olympedia;
 
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
@@ -19,6 +21,7 @@ public class AthleteCrawler : BaseOlympediaCrawler
     public async override Task StartAsync()
     {
         this.Logger.LogInformation($"{this.GetType().FullName} Start!");
+        var groups = await this.GroupsService.GetGroupNamesAsync(this.CrawlerId.Value);
 
         try
         {
@@ -48,14 +51,19 @@ public class AthleteCrawler : BaseOlympediaCrawler
 
                                     foreach (var athleteUrl in athletetUrls)
                                     {
-                                        try
+                                        var number = Regex.Match(athleteUrl, @"([\d+])");
+                                        if (!groups.Contains($"athlete_{number.Groups[1].Value}.zip"))
                                         {
-                                            var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
-                                            await this.ProcessGroupAsync(athleteHttpModel);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            this.Logger.LogError(ex, $"Failed to download data: {athleteUrl};");
+                                            try
+                                            {
+                                                var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
+                                                groups.Add(athleteUrl);
+                                                await this.ProcessGroupAsync(athleteHttpModel);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                this.Logger.LogError(ex, $"Failed to download data: {athleteUrl};");
+                                            }
                                         }
                                     }
 
@@ -69,14 +77,19 @@ public class AthleteCrawler : BaseOlympediaCrawler
                                         {
                                             foreach (var athleteUrl in athletetUrls)
                                             {
-                                                try
+                                                var number = Regex.Match(athleteUrl, @"([\d+])");
+                                                if (!groups.Contains($"athlete_{number.Groups[1].Value}.zip"))
                                                 {
-                                                    var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
-                                                    await this.ProcessGroupAsync(athleteHttpModel);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    this.Logger.LogError(ex, $"Failed to process data: {athleteUrl};");
+                                                    try
+                                                    {
+                                                        var athleteHttpModel = await this.HttpService.GetAsync(athleteUrl);
+                                                        groups.Add(athleteUrl);
+                                                        await this.ProcessGroupAsync(athleteHttpModel);
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        this.Logger.LogError(ex, $"Failed to process data: {athleteUrl};");
+                                                    }
                                                 }
                                             }
                                         }
