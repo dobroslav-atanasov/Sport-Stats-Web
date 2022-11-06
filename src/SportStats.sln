@@ -39,7 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStats.Web", "Web\Sport
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStats.Data.Common", "Data\SportStats.Data.Common\SportStats.Data.Common.csproj", "{FF181DC8-44F3-41A1-B8A5-82D4A3EDB198}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportStats.Data.Seeders", "Data\SportStats.Data.Seeders\SportStats.Data.Seeders.csproj", "{DC8B7FBD-93FC-4939-8066-3734D4FCBCDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportStats.Data.Seeders", "Data\SportStats.Data.Seeders\SportStats.Data.Seeders.csproj", "{DC8B7FBD-93FC-4939-8066-3734D4FCBCDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportStats.Common", "Common\SportStats.Common\SportStats.Common.csproj", "{D6B37877-6D72-4844-80EE-D3DA7EC0364F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,10 @@ Global
 		{DC8B7FBD-93FC-4939-8066-3734D4FCBCDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC8B7FBD-93FC-4939-8066-3734D4FCBCDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC8B7FBD-93FC-4939-8066-3734D4FCBCDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6B37877-6D72-4844-80EE-D3DA7EC0364F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6B37877-6D72-4844-80EE-D3DA7EC0364F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6B37877-6D72-4844-80EE-D3DA7EC0364F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6B37877-6D72-4844-80EE-D3DA7EC0364F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{169D88E1-EDBE-4E5C-8B31-40EDB87BD9B6} = {38175146-E177-4AC1-BFCA-FF5CB84E54C9}
 		{FF181DC8-44F3-41A1-B8A5-82D4A3EDB198} = {1608C313-B364-478E-A3A3-819D4C308DB6}
 		{DC8B7FBD-93FC-4939-8066-3734D4FCBCDF} = {1608C313-B364-478E-A3A3-819D4C308DB6}
+		{D6B37877-6D72-4844-80EE-D3DA7EC0364F} = {0FE83A36-E9DD-4C39-AA77-DA989D8FCFB4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5EEE767-8A12-4C19-BF3F-5E4E2422D424}
