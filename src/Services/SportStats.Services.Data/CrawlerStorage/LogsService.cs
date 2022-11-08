@@ -1,13 +1,14 @@
 ﻿namespace SportStats.Services.Data.CrawlerStorage;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Microsoft.EntityFrameworkCore;
+using global::SportStats.Data.Contexts;
+using global::SportStats.Data.Models.Entities.Crawlers;
+using global::SportStats.Services.Data.CrawlerStorage.Interfaces;
 
-using SportStats.Data.Contexts;
-using SportStats.Data.Models.Entities.Crawlers;
-using SportStats.Services.Data.CrawlerStorage.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 public class LogsService : BaseCrawlerStorageService, ILogsService
 {
@@ -20,6 +21,17 @@ public class LogsService : BaseCrawlerStorageService, ILogsService
     {
         await this.Context.AddAsync(log);
         await this.Context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Guid>> GetLogIdentifiersAsync(int crawlerId)
+    {
+        var identifiers = await this.Context
+            .Logs
+            .Where(l => l.CrawlerId == crawlerId)
+            .Select(l => l.Identifier)
+            .ToListAsync();
+
+        return identifiers;
     }
 
     public async Task UpdateLogAsync(Guid identifier, int operation)
