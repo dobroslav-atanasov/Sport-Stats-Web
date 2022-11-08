@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
+using SportStats.Common.Converters;
+using SportStats.Common.Converters.WorldCountries;
 using SportStats.Common.Crawlers;
 using SportStats.Common.Crawlers.Countries;
 using SportStats.Common.Crawlers.Olympedia;
@@ -17,6 +19,8 @@ using SportStats.Data.Seeders.Interfaces;
 using SportStats.Services;
 using SportStats.Services.Data.CrawlerStorage;
 using SportStats.Services.Data.CrawlerStorage.Interfaces;
+using SportStats.Services.Data.SportStats;
+using SportStats.Services.Data.SportStats.Interfaces;
 using SportStats.Services.Interfaces;
 using SportStats.Services.Mapper;
 
@@ -88,12 +92,15 @@ public class Program
         services.AddScoped<IHttpService, HttpService>();
         services.AddScoped<IZipService, ZipService>();
         services.AddScoped<IMD5Hash, MD5Hash>();
+        services.AddScoped<IRegexService, RegexService>();
+        services.AddScoped<IDateService, DateService>();
 
         // SERVICES DATA
         services.AddScoped<ICrawlersService, CrawlersService>();
         services.AddScoped<IOperationsService, OperationsService>();
         services.AddScoped<IGroupsService, GroupsService>();
         services.AddScoped<ILogsService, LogsService>();
+        services.AddTransient<ICountryService, CountryService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
@@ -105,6 +112,8 @@ public class Program
         services.AddTransient<AthleteCrawler>();
 
         // CONVERTERS
+        services.AddTransient<ConverterManager>();
+        services.AddTransient<WorldCountryConverter>();
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;
