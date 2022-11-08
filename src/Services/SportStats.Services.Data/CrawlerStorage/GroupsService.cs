@@ -3,14 +3,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using global::SportStats.Data.Contexts;
+using global::SportStats.Data.Models.Entities.Crawlers;
+using global::SportStats.Data.Models.Enumerations;
+using global::SportStats.Services.Data.CrawlerStorage.Interfaces;
+using global::SportStats.Services.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
-using SportStats.Data.Contexts;
-using SportStats.Data.Models.Entities.Crawlers;
-using SportStats.Data.Models.Enumerations;
-using SportStats.Services.Data.CrawlerStorage.Interfaces;
-using SportStats.Services.Interfaces;
 
 public class GroupsService : BaseCrawlerStorageService, IGroupsService
 {
@@ -109,6 +109,15 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
         var group = await this.Context
             .Groups
             .FirstOrDefaultAsync(g => g.CrawlerId == crawlerId && g.Name == name);
+
+        return group;
+    }
+
+    public async Task<Group> GetGroupAsync(Guid identifier)
+    {
+        var group = await this.Context
+            .Groups
+            .FirstOrDefaultAsync(g => g.Identifier == identifier);
 
         return group;
     }

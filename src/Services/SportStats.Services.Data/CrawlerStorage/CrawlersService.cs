@@ -2,11 +2,12 @@
 
 using System.Threading.Tasks;
 
+using global::SportStats.Data.Contexts;
+using global::SportStats.Data.Models.Entities.Crawlers;
+using global::SportStats.Services.Data.CrawlerStorage.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
-using SportStats.Data.Contexts;
-using SportStats.Data.Models.Entities.Crawlers;
-using SportStats.Services.Data.CrawlerStorage.Interfaces;
 
 public class CrawlersService : BaseCrawlerStorageService, ICrawlersService
 {

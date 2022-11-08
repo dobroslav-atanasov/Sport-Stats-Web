@@ -1,6 +1,6 @@
 ﻿namespace SportStats.Services.Data.CrawlerStorage;
 
-using SportStats.Data.Contexts;
+using global::SportStats.Data.Contexts;
 
 public abstract class BaseCrawlerStorageService
 {
