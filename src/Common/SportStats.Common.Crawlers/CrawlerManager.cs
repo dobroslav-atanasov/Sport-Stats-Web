@@ -29,11 +29,15 @@ public class CrawlerManager
 
 	public async Task RunWorldCountryCrawlers()
 	{
-		//await this.worldCountryCrawler.StartAsync();
-		//await this.olympediaNOCCrawler.StartAsync();
-		//await this.olympediaGameCrawler.StartAsync();
-		//await this.olympediaSportDisciplineCrawler.StartAsync();
-		//await this.olympediaResultCrawler.StartAsync();
+		await this.worldCountryCrawler.StartAsync();
+	}
+
+	public async Task RunOlympediaCrawlers()
+	{
+		await this.olympediaNOCCrawler.StartAsync();
+		await this.olympediaGameCrawler.StartAsync();
+		await this.olympediaSportDisciplineCrawler.StartAsync();
+		await this.olympediaResultCrawler.StartAsync();
 		await this.olympediaAthleteCrawler.StartAsync();
 	}
 }
