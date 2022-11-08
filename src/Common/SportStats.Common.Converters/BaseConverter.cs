@@ -1,6 +1,10 @@
 ﻿namespace SportStats.Common.Converters;
 
+using System.Text;
+
 using Dasync.Collections;
+
+using HtmlAgilityPack;
 
 using Microsoft.Extensions.Logging;
 
@@ -72,5 +76,15 @@ public abstract class BaseConverter
         }
 
         this.Logger.LogInformation($"Converter: {crawlerName} end.");
+    }
+
+    protected HtmlDocument CreateHtmlDocument(Document document)
+    {
+        var encoding = Encoding.GetEncoding(document.Encoding);
+        var html = encoding.GetString(document.Content).Decode();
+        var htmlDocument = new HtmlDocument();
+        htmlDocument.LoadHtml(html);
+
+        return htmlDocument;
     }
 }
