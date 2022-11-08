@@ -1,10 +1,12 @@
 ﻿namespace SportStats.Services.Data.CrawlerStorage.Interfaces;
 
-using SportStats.Data.Models.Entities.Crawlers;
+using global::SportStats.Data.Models.Entities.Crawlers;
 
 public interface IGroupsService
 {
     Task AddOrUpdateGroupAsync(Group group);
+
+    Task<Group> GetGroupAsync(Guid identifier);
 
     Task<Group> GetGroupAsync(int crawlerId, string name);
 
