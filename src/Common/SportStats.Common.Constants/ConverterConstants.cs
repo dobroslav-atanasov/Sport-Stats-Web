@@ -2,5 +2,7 @@
 
 public static class ConverterConstants
 {
-    public const string WORLD_COUNTRIES_MAIN_URL = "SportStats.Common.Crawlers.Countries.WorldCountryCrawler";
+    public const string WORLD_COUNTRIES_CONVERTER = "SportStats.Common.Crawlers.Countries.WorldCountryCrawler";
+
+    public const string OLYMPEDIA_NOC_CONVERTER = "SportStats.Common.Crawlers.Olympedia.NOCCrawler";
 }
