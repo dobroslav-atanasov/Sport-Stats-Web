@@ -9,4 +9,6 @@ public interface IRegexService
     Match Match(string text, string pattern);
 
     string Replace(string text, string pattern, string replacement);
+
+    string CutHtml(string input);
 }

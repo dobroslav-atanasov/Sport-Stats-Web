@@ -34,4 +34,9 @@ public class RegexService : IRegexService
     {
         return Regex.Replace(text, pattern, replacement);
     }
+
+    public string CutHtml(string input)
+    {
+        return Regex.Replace(input, "<.*?>", string.Empty);
+    }
 }
