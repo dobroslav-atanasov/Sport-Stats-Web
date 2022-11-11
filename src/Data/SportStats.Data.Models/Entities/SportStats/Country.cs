@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using global::SportStats.Data.Models.Entities.Interfaces;
 
 [Table("Countries", Schema = "dbo")]
-public class Country : BaseEntity<int>, ICreatableEntity, IDeletableEntity
+public class Country : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<Country>
 {
     [Required]
     [MaxLength(100)]
@@ -20,13 +20,12 @@ public class Country : BaseEntity<int>, ICreatableEntity, IDeletableEntity
     [Required]
     public bool IsIndependent { get; set; } = false;
 
-    [Required]
     [StringLength(2)]
-    public string Alpha2Code { get; set; }
+    public string TwoDigitsCode { get; set; }
 
     [Required]
-    [StringLength(3)]
-    public string Alpha3Code { get; set; }
+    [StringLength(10)]
+    public string Code { get; set; }
 
     [MaxLength(100)]
     public string Capital { get; set; }
@@ -43,23 +42,108 @@ public class Country : BaseEntity<int>, ICreatableEntity, IDeletableEntity
     [Required]
     public int TotalArea { get; set; }
 
-    [MaxLength(50)]
-    public string HighestPointName { get; set; }
+    [MaxLength(500)]
+    public string HighestPointPlace { get; set; }
 
     public int? HighestPoint { get; set; }
 
-    [MaxLength(50)]
-    public string LowestPointName { get; set; }
+    [MaxLength(500)]
+    public string LowestPointPlace { get; set; }
 
     public int? LowestPoint { get; set; }
 
     public byte[] Flag { get; set; }
 
-    public DateTime CreatedOn => DateTime.UtcNow;
+    public DateTime CreatedOn { get; set; }
 
     public DateTime? ModifiedOn { get; set; }
 
     public bool IsDeleted { get; set; } = false;
 
     public DateTime? DeletedOn { get; set; }
+
+    public bool Update(Country other)
+    {
+        var isUpdated = false;
+
+        if (this.Name != other.Name)
+        {
+            this.Name = other.Name;
+            isUpdated = true;
+        }
+
+        if (this.OfficialName != other.OfficialName)
+        {
+            this.OfficialName = other.OfficialName;
+            isUpdated = true;
+        }
+
+        if (this.IsIndependent != other.IsIndependent)
+        {
+            this.IsIndependent = other.IsIndependent;
+            isUpdated = true;
+        }
+
+        if (this.Capital != other.Capital)
+        {
+            this.Capital = other.Capital;
+            isUpdated = true;
+        }
+
+        if (this.Continent != other.Continent)
+        {
+            this.Continent = other.Continent;
+            isUpdated = true;
+        }
+
+        if (this.MemberOf != other.MemberOf)
+        {
+            this.MemberOf = other.MemberOf;
+            isUpdated = true;
+        }
+
+        if (this.Population != other.Population)
+        {
+            this.Population = other.Population;
+            isUpdated = true;
+        }
+
+        if (this.TotalArea != other.TotalArea)
+        {
+            this.TotalArea = other.TotalArea;
+            isUpdated = true;
+        }
+
+        if (this.HighestPointPlace != other.HighestPointPlace)
+        {
+            this.HighestPointPlace = other.HighestPointPlace;
+            isUpdated = true;
+        }
+
+        if (this.HighestPoint != other.HighestPoint)
+        {
+            this.HighestPoint = other.HighestPoint;
+            isUpdated = true;
+        }
+
+        if (this.LowestPointPlace != other.LowestPointPlace)
+        {
+            this.LowestPointPlace = other.LowestPointPlace;
+            isUpdated = true;
+        }
+
+        if (this.LowestPoint != other.LowestPoint)
+        {
+            this.LowestPoint = other.LowestPoint;
+            isUpdated = true;
+        }
+
+        if (this.Flag != other.Flag)
+        {
+            this.Flag = other.Flag;
+            isUpdated = true;
+        }
+
+        return isUpdated;
+    }
 }
