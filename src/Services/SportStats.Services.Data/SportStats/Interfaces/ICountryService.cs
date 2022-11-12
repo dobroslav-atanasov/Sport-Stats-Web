@@ -4,7 +4,11 @@ using global::SportStats.Data.Models.Entities.SportStats;
 
 public interface ICountryService
 {
-    Task<Country> AddAsync(Country country);
+    Task<TCountry> AddAsync<TCountry>(TCountry country);
 
-    Task<Country> UpdateAsync(Country country);
+    Task<TCountry> UpdateAsync<TCountry>(TCountry country);
+
+    Task<WorldCountry> GetWorldCountryAsync(string code);
+
+    Task<OGCountry> GetOlympicGameCountryAsync(string code);
 }

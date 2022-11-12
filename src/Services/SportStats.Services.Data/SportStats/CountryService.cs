@@ -15,7 +15,7 @@ public class CountryService : BaseSportStatsService, ICountryService
     {
     }
 
-    public async Task<Country> AddAsync(Country country)
+    public async Task<TCountry> AddAsync<TCountry>(TCountry country)
     {
         await this.Context.AddAsync(country);
         await this.Context.SaveChangesAsync();
@@ -23,7 +23,25 @@ public class CountryService : BaseSportStatsService, ICountryService
         return country;
     }
 
-    public async Task<Country> UpdateAsync(Country country)
+    public async Task<WorldCountry> GetWorldCountryAsync(string code)
+    {
+        var country = await this.Context
+            .Countries
+            .FirstOrDefaultAsync(c => c.Code == code);
+
+        return country;
+    }
+
+    public async Task<OGCountry> GetOlympicGameCountryAsync(string code)
+    {
+        var country = await this.Context
+            .OGCountries
+            .FirstOrDefaultAsync(c => c.Code == code);
+
+        return country;
+    }
+
+    public async Task<TCountry> UpdateAsync<TCountry>(TCountry country)
     {
         this.Context.Entry(country).State = EntityState.Modified;
         await this.Context.SaveChangesAsync();
