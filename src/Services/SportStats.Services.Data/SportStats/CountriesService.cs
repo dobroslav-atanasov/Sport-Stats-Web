@@ -1,16 +1,19 @@
 ﻿namespace SportStats.Services.Data.SportStats;
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using global::SportStats.Data.Contexts;
+using global::SportStats.Data.Models.Cache;
 using global::SportStats.Data.Models.Entities.SportStats;
 using global::SportStats.Services.Data.SportStats.Interfaces;
+using global::SportStats.Services.Mapper.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 
-public class CountryService : BaseSportStatsService, ICountryService
+public class CountriesService : BaseSportStatsService, ICountriesService
 {
-    public CountryService(SportStatsDbContext context)
+    public CountriesService(SportStatsDbContext context)
         : base(context)
     {
     }
@@ -47,5 +50,26 @@ public class CountryService : BaseSportStatsService, ICountryService
         await this.Context.SaveChangesAsync();
 
         return country;
+    }
+
+    public IEnumerable<OGCountry> GetAllOlympicGameCountries()
+    {
+        var countries = this.Context
+            .OGCountries
+            .AsNoTracking()
+            .ToList();
+
+        return countries;
+    }
+
+    public ICollection<OGCountryCacheModel> GetOGCountriesCache()
+    {
+        var countries = this.Context
+            .OGCountries
+            .AsNoTracking()
+            .To<OGCountryCacheModel>()
+            .ToList();
+
+        return countries;
     }
 }
