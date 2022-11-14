@@ -2,6 +2,7 @@
 
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
@@ -11,8 +12,9 @@ using SportStats.Services.Interfaces;
 
 public class WorldCountryCrawler : BaseCrawler
 {
-    public WorldCountryCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
-        : base(logger, httpService, crawlersService, groupsService)
+
+    public WorldCountryCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService, IConfiguration configuration)
+        : base(logger, httpService, crawlersService, groupsService, configuration)
     {
     }
 
@@ -22,7 +24,7 @@ public class WorldCountryCrawler : BaseCrawler
 
         try
         {
-            var httpModel = await this.HttpService.GetAsync(CrawlerConstants.WORLD_COUNTRIES_URL);
+            var httpModel = await this.HttpService.GetAsync(this.Configuration.GetSection(CrawlerConstants.WORLD_COUNTRIES_URL).Value);
             var countryUrls = this.ExtractCountryUrls(httpModel);
 
             foreach (var url in countryUrls)
@@ -53,7 +55,7 @@ public class WorldCountryCrawler : BaseCrawler
             .DocumentNode
             .SelectNodes("//ul[@class='flag-grid']/li/a")
             .Select(x => x.Attributes["href"]?.Value.Trim())
-            .Select(x => this.CreateUrl(x, CrawlerConstants.WORLD_COUNTRIES_MAIN_URL))
+            .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.WORLD_COUNTRIES_URL).Value))
             .Distinct()
             .ToList();
 

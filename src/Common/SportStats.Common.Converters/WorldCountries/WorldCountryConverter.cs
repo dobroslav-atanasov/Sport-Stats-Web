@@ -3,6 +3,7 @@
 using System;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
@@ -16,13 +17,15 @@ public class WorldCountryConverter : BaseConverter
 {
     private readonly ICountriesService countriesService;
     private readonly IHttpService httpService;
+    private readonly IConfiguration configuration;
 
     public WorldCountryConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, ICountriesService countryService, IHttpService httpService)
+        IRegexService regexService, ICountriesService countryService, IHttpService httpService, IConfiguration configuration)
         : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
     {
         this.countriesService = countryService;
         this.httpService = httpService;
+        this.configuration = configuration;
     }
 
     protected override async Task ProcessGroupAsync(Group group)
@@ -122,7 +125,7 @@ public class WorldCountryConverter : BaseConverter
             }
 
             var coutnryCode = country.TwoDigitsCode != null ? country.TwoDigitsCode.ToLower() : country.Code.ToLower();
-            var flag = await this.httpService.DownloadBytesAsync($"{CrawlerConstants.WORLD_COUNTRIES_DOWNLOAD_IMAGE}{coutnryCode}.png");
+            var flag = await this.httpService.DownloadBytesAsync($"{this.configuration.GetSection(CrawlerConstants.WORLD_COUNTRIES_DOWNLOAD_IMAGE).Value}{coutnryCode}.png");
             country.Flag = flag;
 
             var dbCountry = await this.countriesService.GetWorldCountryAsync(country.Code);

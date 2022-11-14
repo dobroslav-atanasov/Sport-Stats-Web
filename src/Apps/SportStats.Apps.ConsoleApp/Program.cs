@@ -59,6 +59,9 @@ public class Program
     {
         var services = new ServiceCollection();
 
+        // CONFIGURATION
+        services.AddSingleton(configuration);
+
         // LOGGING
         services.AddLogging(config =>
         {

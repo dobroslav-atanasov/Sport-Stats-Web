@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using HtmlAgilityPack;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
@@ -15,8 +16,8 @@ using SportStats.Services.Interfaces;
 
 public class NOCCrawler : BaseOlympediaCrawler
 {
-    public NOCCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
-        : base(logger, httpService, crawlersService, groupsService)
+    public NOCCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService, IConfiguration configuration)
+        : base(logger, httpService, crawlersService, groupsService, configuration)
     {
     }
 
@@ -26,7 +27,7 @@ public class NOCCrawler : BaseOlympediaCrawler
 
         try
         {
-            var httpModel = await this.HttpService.GetAsync(CrawlerConstants.OLYMPEDIA_NOC_URL);
+            var httpModel = await this.HttpService.GetAsync(this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_NOC_URL).Value);
             var countryUrls = this.ExtractCountryUrls(httpModel);
 
             foreach (var url in countryUrls)
@@ -62,7 +63,7 @@ public class NOCCrawler : BaseOlympediaCrawler
         }
         catch (Exception ex)
         {
-            this.Logger.LogError(ex, $"Failed to process url: {CrawlerConstants.OLYMPEDIA_NOC_URL}");
+            this.Logger.LogError(ex, $"Failed to process url: {this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_NOC_URL).Value}");
         }
 
         this.Logger.LogInformation($"{this.GetType().FullName} End!");
@@ -76,7 +77,7 @@ public class NOCCrawler : BaseOlympediaCrawler
             .SelectNodes("//a")
             .Select(x => x.Attributes["href"]?.Value.Trim())
             .Where(x => x.StartsWith("/organizations/"))
-            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
             .FirstOrDefault();
 
         return url;
@@ -100,7 +101,7 @@ public class NOCCrawler : BaseOlympediaCrawler
             .Where(x => x.OuterHtml.Contains("glyphicon-ok"))
             .Select(x => Regex.Match(x.OuterHtml, "href=\"(.*?)\"").Groups[1].Value.Trim())
             .Where(x => x != null)
-            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
             .Distinct()
             .ToList();
 

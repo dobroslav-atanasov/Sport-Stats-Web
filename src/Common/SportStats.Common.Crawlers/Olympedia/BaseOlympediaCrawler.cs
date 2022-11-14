@@ -2,6 +2,7 @@
 
 using HtmlAgilityPack;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
@@ -11,8 +12,8 @@ using SportStats.Services.Interfaces;
 
 public abstract class BaseOlympediaCrawler : BaseCrawler
 {
-    protected BaseOlympediaCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
-        : base(logger, httpService, crawlersService, groupsService)
+    protected BaseOlympediaCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService, IConfiguration configuration)
+        : base(logger, httpService, crawlersService, groupsService, configuration)
     {
     }
 
@@ -36,7 +37,7 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
                 .SelectNodes("//a")
                 .Select(x => x.Attributes["href"]?.Value)
                 .Where(x => x != null)
-                .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+                .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
                 .Distinct()
                 .ToList();
 
@@ -67,7 +68,7 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
             .SelectNodes("//a")
             .Select(x => x.Attributes["href"]?.Value)
             .Where(x => x != null)
-            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
             .Distinct()
             .ToList();
 
@@ -94,7 +95,7 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
                 .SelectNodes("//a")
                 .Select(x => x.Attributes["href"]?.Value.Trim())
                 .Where(x => x.StartsWith("/results/"))
-                .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+                .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
                 .Distinct()
                 .ToList();
 
@@ -112,7 +113,7 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
             .SelectNodes("//table//a")
             .Select(x => x.Attributes["href"]?.Value.Trim())
             .Where(x => x.StartsWith("/results/"))
-            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
             .Distinct()
             .ToList();
 
@@ -122,7 +123,7 @@ public abstract class BaseOlympediaCrawler : BaseCrawler
             .SelectNodes("//form[@class='form-inline']//option")?
             .Select(x => x.Attributes["value"]?.Value.Trim())
             .Where(x => !string.IsNullOrEmpty(x))
-            .Select(x => this.CreateUrl($"/results/{x}", CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Select(x => this.CreateUrl($"/results/{x}", this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
             .Distinct()
             .ToList();
 

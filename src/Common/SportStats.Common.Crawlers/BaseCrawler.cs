@@ -1,5 +1,6 @@
 ﻿namespace SportStats.Common.Crawlers;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Data.Models.Entities.Crawlers;
@@ -11,12 +12,13 @@ public abstract class BaseCrawler
 {
     private readonly ICrawlersService crawlersService;
 
-    public BaseCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
+    public BaseCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService, IConfiguration configuration)
     {
         this.Logger = logger;
         this.HttpService = httpService;
         this.crawlersService = crawlersService;
         this.GroupsService = groupsService;
+        this.Configuration = configuration;
         this.CrawlerId = new Lazy<int>(() => this.crawlersService.GetCrawlerIdAsync(this.GetType().FullName).GetAwaiter().GetResult());
     }
 
@@ -25,6 +27,8 @@ public abstract class BaseCrawler
     protected IHttpService HttpService { get; }
 
     protected IGroupsService GroupsService { get; }
+
+    protected IConfiguration Configuration { get; }
 
     protected Lazy<int> CrawlerId { get; }
 

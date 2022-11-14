@@ -5,12 +5,21 @@ using System.Threading.Tasks;
 
 using HtmlAgilityPack;
 
+using Microsoft.Extensions.Configuration;
+
 using SportStats.Common.Constants;
 using SportStats.Data.Models.Http;
 using SportStats.Services.Interfaces;
 
 public class HttpService : IHttpService
 {
+    private readonly IConfiguration configuration;
+
+    public HttpService(IConfiguration configuration)
+    {
+        this.configuration = configuration;
+    }
+
     public async Task<byte[]> DownloadBytesAsync(string url)
     {
         using var handler = new HttpClientHandler();
@@ -83,7 +92,7 @@ public class HttpService : IHttpService
             httpModel.HtmlDocument = htmlDocument;
         }
 
-        if (url.StartsWith(CrawlerConstants.OLYMPEDIA_MAIN_URL))
+        if (url.StartsWith(this.configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
         {
             httpModel.Content = httpModel
                 .HtmlDocument

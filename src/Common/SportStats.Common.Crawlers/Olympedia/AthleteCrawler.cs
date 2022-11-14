@@ -4,17 +4,20 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
+
+//using SportStats.Common.Constants;
 using SportStats.Data.Models.Http;
 using SportStats.Services.Data.CrawlerStorage.Interfaces;
 using SportStats.Services.Interfaces;
 
 public class AthleteCrawler : BaseOlympediaCrawler
 {
-    public AthleteCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
-        : base(logger, httpService, crawlersService, groupsService)
+    public AthleteCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService, IConfiguration configuration)
+        : base(logger, httpService, crawlersService, groupsService, configuration)
     {
     }
 
@@ -25,7 +28,7 @@ public class AthleteCrawler : BaseOlympediaCrawler
 
         try
         {
-            var httpModel = await this.HttpService.GetAsync(CrawlerConstants.OLYMPEDIA_GAMES_URL);
+            var httpModel = await this.HttpService.GetAsync(this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_GAMES_URL).Value);
             var gameUrls = this.ExtractGameUrls(httpModel);
 
             foreach (var gameUrl in gameUrls)
@@ -118,7 +121,7 @@ public class AthleteCrawler : BaseOlympediaCrawler
         }
         catch (Exception ex)
         {
-            this.Logger.LogError(ex, $"Failed to process url: {CrawlerConstants.OLYMPEDIA_GAMES_URL};");
+            this.Logger.LogError(ex, $"Failed to process url: {this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_GAMES_URL).Value};");
         }
 
         this.Logger.LogInformation($"{this.GetType().FullName} End!");
@@ -132,7 +135,7 @@ public class AthleteCrawler : BaseOlympediaCrawler
             .SelectNodes("//div[@class='container']//a")?
             .Select(x => x.Attributes["href"]?.Value.Trim())
             .Where(x => x.StartsWith("/athletes/"))
-            .Select(x => this.CreateUrl(x, CrawlerConstants.OLYMPEDIA_MAIN_URL))
+            .Select(x => this.CreateUrl(x, this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_MAIN_URL).Value))
             .Distinct()
             .ToList();
 

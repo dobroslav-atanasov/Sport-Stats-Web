@@ -2,6 +2,7 @@
 
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
@@ -10,8 +11,8 @@ using SportStats.Services.Interfaces;
 
 public class GameCrawler : BaseOlympediaCrawler
 {
-    public GameCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService)
-        : base(logger, httpService, crawlersService, groupsService)
+    public GameCrawler(ILogger<BaseCrawler> logger, IHttpService httpService, ICrawlersService crawlersService, IGroupsService groupsService, IConfiguration configuration)
+        : base(logger, httpService, crawlersService, groupsService, configuration)
     {
     }
 
@@ -21,7 +22,7 @@ public class GameCrawler : BaseOlympediaCrawler
 
         try
         {
-            var httpModel = await this.HttpService.GetAsync(CrawlerConstants.OLYMPEDIA_GAMES_URL);
+            var httpModel = await this.HttpService.GetAsync(this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_GAMES_URL).Value);
             var urls = this.ExtractGameUrls(httpModel);
 
             foreach (var url in urls)
@@ -39,7 +40,7 @@ public class GameCrawler : BaseOlympediaCrawler
         }
         catch (Exception ex)
         {
-            this.Logger.LogError(ex, $"Failed to process url: {CrawlerConstants.OLYMPEDIA_GAMES_URL};");
+            this.Logger.LogError(ex, $"Failed to process url: {this.Configuration.GetSection(CrawlerConstants.OLYMPEDIA_GAMES_URL).Value};");
         }
 
         this.Logger.LogInformation($"{this.GetType().FullName} End!");
