@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 using SportStats.Common.Constants;
 using SportStats.Common.Converters;
+using SportStats.Common.Converters.Olympedia;
 using SportStats.Common.Converters.WorldCountries;
 using SportStats.Common.Crawlers;
 using SportStats.Common.Crawlers.Countries;
@@ -94,13 +95,16 @@ public class Program
         services.AddScoped<IMD5Hash, MD5Hash>();
         services.AddScoped<IRegexService, RegexService>();
         services.AddScoped<IDateService, DateService>();
+        services.AddScoped<INormalizeService, NormalizeService>();
 
         // SERVICES DATA
         services.AddScoped<ICrawlersService, CrawlersService>();
         services.AddScoped<IOperationsService, OperationsService>();
         services.AddScoped<IGroupsService, GroupsService>();
         services.AddScoped<ILogsService, LogsService>();
-        services.AddTransient<ICountryService, CountryService>();
+        services.AddScoped<ICountriesService, CountriesService>();
+        services.AddScoped<IDataCacheService, DataCacheService>();
+        services.AddScoped<IGamesService, GamesService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
@@ -114,6 +118,8 @@ public class Program
         // CONVERTERS
         services.AddTransient<ConverterManager>();
         services.AddTransient<WorldCountryConverter>();
+        services.AddTransient<NOCConverter>();
+        services.AddTransient<GameConverter>();
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;
