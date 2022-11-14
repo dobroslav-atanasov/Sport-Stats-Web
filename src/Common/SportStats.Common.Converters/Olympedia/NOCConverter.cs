@@ -12,16 +12,14 @@ using SportStats.Services.Interfaces;
 
 public class NOCConverter : BaseConverter
 {
-    private readonly IRegexService regexService;
-    private readonly ICountryService countryService;
+    private readonly ICountriesService countriesService;
     private readonly INormalizeService normalizeService;
 
     public NOCConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, ICountryService countryService, INormalizeService normalizeService)
-        : base(logger, crawlersService, logsService, groupsService, zipService)
+        IRegexService regexService, ICountriesService countriesService, INormalizeService normalizeService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
     {
-        this.regexService = regexService;
-        this.countryService = countryService;
+        this.countriesService = countriesService;
         this.normalizeService = normalizeService;
     }
 
@@ -32,7 +30,7 @@ public class NOCConverter : BaseConverter
             var country = new OGCountry { CreatedOn = DateTime.UtcNow };
             var countryDocument = this.CreateHtmlDocument(group.Documents.Single(d => d.Order == 1));
             var header = countryDocument.DocumentNode.SelectSingleNode("//h1");
-            var match = this.regexService.Match(header.InnerText, @"(.*?)\((.*?)\)");
+            var match = this.RegexService.Match(header.InnerText, @"(.*?)\((.*?)\)");
             if (match != null)
             {
                 country.CountryName = match.Groups[1].Value.Decode().Trim();
@@ -48,7 +46,7 @@ public class NOCConverter : BaseConverter
                     .OuterHtml
                     .Decode();
 
-                country.CountryDescription = this.regexService.CutHtml(countryDescription);
+                country.CountryDescription = this.RegexService.CutHtml(countryDescription);
 
                 if (group.Documents.Count > 1)
                 {
@@ -56,10 +54,10 @@ public class NOCConverter : BaseConverter
                     var committeeName = committeeDocument.DocumentNode.SelectSingleNode("//h1").InnerText.Decode();
                     country.CommitteeName = committeeName;
 
-                    var abbreavition = this.regexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Abbreviation<\/th>\s*<td>(.*?)<\/td>\s*<\/tr>");
-                    var foundedYear = this.regexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Founded<\/th>\s*<td>([\d]*)<\/td>\s*<\/tr>");
-                    var disbandedYear = this.regexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Disbanded<\/th>\s*<td>([\d]*)<\/td>\s*<\/tr>");
-                    var recognizedYear = this.regexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Recognized by the IOC<\/th>\s*<td>([\d]*)<\/td>\s*<\/tr>");
+                    var abbreavition = this.RegexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Abbreviation<\/th>\s*<td>(.*?)<\/td>\s*<\/tr>");
+                    var foundedYear = this.RegexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Founded<\/th>\s*<td>([\d]*)<\/td>\s*<\/tr>");
+                    var disbandedYear = this.RegexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Disbanded<\/th>\s*<td>([\d]*)<\/td>\s*<\/tr>");
+                    var recognizedYear = this.RegexService.MatchFirstGroup(committeeDocument.DocumentNode.OuterHtml, @"<tr>\s*<th>Recognized by the IOC<\/th>\s*<td>([\d]*)<\/td>\s*<\/tr>");
 
                     country.CommitteeAbbreavition = !string.IsNullOrEmpty(abbreavition) ? abbreavition : null;
                     country.CommitteeFoundedYear = !string.IsNullOrEmpty(foundedYear) ? int.Parse(foundedYear) : null;
@@ -72,20 +70,20 @@ public class NOCConverter : BaseConverter
                         .OuterHtml?
                         .Decode();
 
-                    country.CommitteeDescription = !string.IsNullOrEmpty(committeeDescription) ? this.regexService.CutHtml(committeeDescription) : null;
+                    country.CommitteeDescription = !string.IsNullOrEmpty(committeeDescription) ? this.RegexService.CutHtml(committeeDescription) : null;
                 }
 
                 var worldCountryCode = this.normalizeService.MapOlympicGamesCountriesAndWorldCountries(country.Code);
                 if (worldCountryCode != null)
                 {
-                    var worldCountry = await this.countryService.GetWorldCountryAsync(worldCountryCode);
+                    var worldCountry = await this.countriesService.GetWorldCountryAsync(worldCountryCode);
                     country.CountryFlag = worldCountry.Flag;
                 }
 
-                var dbCountry = await this.countryService.GetOlympicGameCountryAsync(country.Code);
+                var dbCountry = await this.countriesService.GetOlympicGameCountryAsync(country.Code);
                 if (dbCountry == null)
                 {
-                    await this.countryService.AddAsync(country);
+                    await this.countriesService.AddAsync(country);
                     this.Logger.LogInformation($"Added country: {country.CountryName}");
                 }
                 else
@@ -93,7 +91,7 @@ public class NOCConverter : BaseConverter
                     if (dbCountry.Update(country))
                     {
                         dbCountry.ModifiedOn = DateTime.UtcNow;
-                        await this.countryService.UpdateAsync(dbCountry);
+                        await this.countriesService.UpdateAsync(dbCountry);
                         this.Logger.LogInformation($"Updated country: {country.CountryName}");
                     }
                 }
