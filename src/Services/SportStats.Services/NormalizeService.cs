@@ -216,4 +216,21 @@ public class NormalizeService : INormalizeService
             _ => null
         };
     }
+
+    public string NormalizeHostCityName(string hostCity)
+    {
+        return hostCity switch
+        {
+            "Athina" => "Athens",
+            "Antwerpen" => "Antwerp",
+            "Ciudad de México" => "Mexico City",
+            "Moskva" => "Moscow",
+            "Sankt Moritz" => "St. Moritz",
+            "Roma" => "Rome",
+            "München" => "Munich",
+            "Montréal" => "Montreal",
+            "Torino" => "Turin",
+            _ => hostCity
+        };
+    }
 }
