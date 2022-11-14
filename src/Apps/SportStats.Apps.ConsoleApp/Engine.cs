@@ -29,6 +29,7 @@ internal class Engine
         //await this.crawlerManager.RunOlympediaCrawlers();
 
         // CONVERTERS
-        await this.converterManager.RunWorldCountriesConverters();
+        //await this.converterManager.RunWorldCountriesConverters();
+        await this.converterManager.RunOlympediaConverters();
     }
 }

@@ -19,16 +19,19 @@ public abstract class BaseConverter
     private readonly IGroupsService groupsService;
     private readonly IZipService zipService;
 
-    public BaseConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService)
+    public BaseConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
+        IRegexService regexService)
     {
         this.Logger = logger;
         this.crawlersService = crawlersService;
         this.logsService = logsService;
         this.groupsService = groupsService;
         this.zipService = zipService;
+        this.RegexService = regexService;
     }
 
     protected ILogger<BaseConverter> Logger { get; }
+    protected IRegexService RegexService { get; }
 
     protected abstract Task ProcessGroupAsync(Group group);
 

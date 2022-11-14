@@ -4,7 +4,7 @@ public static class CrawlerConstants
 {
     public const string WORLD_COUNTRIES_MAIN_URL = "https://flagpedia.net";
     public const string WORLD_COUNTRIES_URL = "https://flagpedia.net/index";
-    public const string WORLD_COUNTRIES_DOWNLOAD_IMAGE = "/download/images";
+    public const string WORLD_COUNTRIES_DOWNLOAD_IMAGE = "https://flagcdn.com/w2560/";
 
     public const string IOC_MAIN_URL = "https://olympics.com/";
     public const string IOC_NOC_URL = "http://olympics.com/ioc/national-olympic-committees";
