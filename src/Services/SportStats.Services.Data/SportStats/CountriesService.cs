@@ -52,16 +52,6 @@ public class CountriesService : BaseSportStatsService, ICountriesService
         return country;
     }
 
-    public IEnumerable<OGCountry> GetAllOlympicGameCountries()
-    {
-        var countries = this.Context
-            .OGCountries
-            .AsNoTracking()
-            .ToList();
-
-        return countries;
-    }
-
     public ICollection<OGCountryCacheModel> GetOGCountriesCache()
     {
         var countries = this.Context
