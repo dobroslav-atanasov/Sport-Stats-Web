@@ -2,7 +2,7 @@
 
 public interface ICreatableEntity
 {
-    DateTime CreatedOn { get; }
+    DateTime CreatedOn { get; set; }
 
     DateTime? ModifiedOn { get; set; }
 }
