@@ -18,12 +18,12 @@ public class CountriesService : BaseSportStatsService, ICountriesService
     {
     }
 
-    public async Task<TCountry> AddAsync<TCountry>(TCountry country)
+    public async Task<TEntity> AddAsync<TEntity>(TEntity entity)
     {
-        await this.Context.AddAsync(country);
+        await this.Context.AddAsync(entity);
         await this.Context.SaveChangesAsync();
 
-        return country;
+        return entity;
     }
 
     public async Task<WorldCountry> GetWorldCountryAsync(string code)
@@ -44,12 +44,12 @@ public class CountriesService : BaseSportStatsService, ICountriesService
         return country;
     }
 
-    public async Task<TCountry> UpdateAsync<TCountry>(TCountry country)
+    public async Task<TEntity> UpdateAsync<TEntity>(TEntity entity)
     {
-        this.Context.Entry(country).State = EntityState.Modified;
+        this.Context.Entry(entity).State = EntityState.Modified;
         await this.Context.SaveChangesAsync();
 
-        return country;
+        return entity;
     }
 
     public ICollection<OGCountryCacheModel> GetOGCountriesCache()

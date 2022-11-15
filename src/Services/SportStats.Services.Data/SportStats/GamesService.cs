@@ -16,12 +16,12 @@ public class GamesService : BaseSportStatsService, IGamesService
     {
     }
 
-    public async Task<OGGame> AddAsync(OGGame game)
+    public async Task<TEntity> AddAsync<TEntity>(TEntity entity)
     {
-        await this.Context.AddAsync(game);
+        await this.Context.AddAsync(entity);
         await this.Context.SaveChangesAsync();
 
-        return game;
+        return entity;
     }
 
     public async Task<OGGame> GetGameAsync(int year, OlympicGameType type)
@@ -33,11 +33,11 @@ public class GamesService : BaseSportStatsService, IGamesService
         return game;
     }
 
-    public async Task<OGGame> UpdateAsync(OGGame game)
+    public async Task<TEntity> UpdateAsync<TEntity>(TEntity entity)
     {
-        this.Context.Entry(game).State = EntityState.Modified;
+        this.Context.Entry(entity).State = EntityState.Modified;
         await this.Context.SaveChangesAsync();
 
-        return game;
+        return entity;
     }
 }

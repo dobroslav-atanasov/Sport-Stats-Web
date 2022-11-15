@@ -108,6 +108,7 @@ public class Program
         services.AddScoped<ICountriesService, CountriesService>();
         services.AddScoped<IDataCacheService, DataCacheService>();
         services.AddScoped<IGamesService, GamesService>();
+        services.AddScoped<ISportsService, SportsService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
