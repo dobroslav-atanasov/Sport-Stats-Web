@@ -10,4 +10,5 @@ public static class CrawlerConstants
     public const string OLYMPEDIA_NOC_URL = "CrawlerSites:Olympedia:NOCUrl";
     public const string OLYMPEDIA_GAMES_URL = "CrawlerSites:Olympedia:GamesUrl";
     public const string OLYMPEDIA_SPORTS_URL = "CrawlerSites:Olympedia:SportsUrl";
+    public const string OLYMPEDIA_VENUES_ULR = "CrawlerSites:Olympedia:VenuesUrl";
 }

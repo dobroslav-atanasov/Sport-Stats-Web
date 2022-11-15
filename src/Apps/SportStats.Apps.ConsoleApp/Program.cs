@@ -118,6 +118,7 @@ public class Program
         services.AddTransient<SportDisciplineCrawler>();
         services.AddTransient<ResultCrawler>();
         services.AddTransient<AthleteCrawler>();
+        services.AddTransient<VenueCrawler>();
 
         // CONVERTERS
         services.AddTransient<ConverterManager>();
