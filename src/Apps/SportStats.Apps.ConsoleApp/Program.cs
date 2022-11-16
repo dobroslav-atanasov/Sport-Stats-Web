@@ -125,6 +125,7 @@ public class Program
         services.AddTransient<WorldCountryConverter>();
         services.AddTransient<NOCConverter>();
         services.AddTransient<GameConverter>();
+        services.AddTransient<SportDisciplineConverter>();
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;

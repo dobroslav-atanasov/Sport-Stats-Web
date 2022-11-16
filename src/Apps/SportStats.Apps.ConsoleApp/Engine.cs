@@ -26,10 +26,10 @@ internal class Engine
 
         // CRAWLERS
         //await this.crawlerManager.RunWorldCountryCrawlers();
-        await this.crawlerManager.RunOlympediaCrawlers();
+        //await this.crawlerManager.RunOlympediaCrawlers();
 
         // CONVERTERS
         //await this.converterManager.RunWorldCountriesConverters();
-        //await this.converterManager.RunOlympediaConverters();
+        await this.converterManager.RunOlympediaConverters();
     }
 }
