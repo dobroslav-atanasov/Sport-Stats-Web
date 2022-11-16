@@ -19,7 +19,7 @@ public class OGSport : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpd
     public string Name { get; set; }
 
     [Required]
-    [StringLength(3)]
+    [StringLength(2)]
     public string Abbreviation { get; set; }
 
     [Required]

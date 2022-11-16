@@ -23,7 +23,14 @@ public class SportDisciplineConverter : BaseConverter
             var document = this.CreateHtmlDocument(group.Documents.Single());
             var lines = document.DocumentNode.SelectNodes("//table[@class='table table-striped sortable']//tr");
 
-            ;
+            foreach (var line in lines)
+            {
+                if (line.OuterHtml.Contains("glyphicon-ok"))
+                {
+                    var elements = line.Elements("td");
+                    ;
+                }
+            }
         }
         catch (Exception ex)
         {
