@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class SportsService : BaseSportStatsService, ISportsService
 {
-    public SportsService(SportStatsDbContext context) 
+    public SportsService(SportStatsDbContext context)
         : base(context)
     {
     }
@@ -23,9 +23,13 @@ public class SportsService : BaseSportStatsService, ISportsService
         return entity;
     }
 
-    public Task<OGSport> GetSportAsync(string name)
+    public async Task<OGSport> GetSportAsync(string name)
     {
-        throw new NotImplementedException();
+        var sport = await this.Context
+            .OGSports
+            .FirstOrDefaultAsync(s => s.Name == name);
+
+        return sport;
     }
 
     public async Task<TEntity> UpdateAsync<TEntity>(TEntity entity)
