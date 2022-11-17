@@ -144,7 +144,7 @@ public class GameConverter : BaseConverter
                     {
                         dbGame.ModifiedOn = DateTime.UtcNow;
                         await this.gamesService.UpdateAsync(dbGame);
-                        this.Logger.LogInformation($"Updated gane: {game.OfficialName}");
+                        this.Logger.LogInformation($"Updated game: {game.OfficialName}");
                     }
                 }
             }
