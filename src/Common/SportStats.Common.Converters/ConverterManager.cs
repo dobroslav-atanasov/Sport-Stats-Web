@@ -10,16 +10,22 @@ public class ConverterManager
 	private readonly NOCConverter olympediaNOCConverter;
 	private readonly GameConverter olympediaGameConverter;
 	private readonly SportDisciplineConverter olympediaSportDisciplineConverter;
+	private readonly VenueConverter olympediaVenueConverter;
+	private readonly EventConverter olympediaEventConverter;
 
 	public ConverterManager(WorldCountryConverter worldCountryConverter,
 		NOCConverter olympediaNOCConverter,
 		GameConverter olympediaGameConverter,
-		SportDisciplineConverter olympediaSportDisciplineConverter)
+		SportDisciplineConverter olympediaSportDisciplineConverter,
+		VenueConverter olympediaVenueConverter,
+		EventConverter olympediaEventConverter)
 	{
 		this.worldCountryConverter = worldCountryConverter;
 		this.olympediaNOCConverter = olympediaNOCConverter;
 		this.olympediaGameConverter = olympediaGameConverter;
 		this.olympediaSportDisciplineConverter = olympediaSportDisciplineConverter;
+		this.olympediaVenueConverter = olympediaVenueConverter;
+		this.olympediaEventConverter = olympediaEventConverter;
 	}
 
 	public async Task RunWorldCountriesConverters()
@@ -31,6 +37,8 @@ public class ConverterManager
 	{
 		//await this.olympediaNOCConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_NOC_CONVERTER);
 		//await this.olympediaGameConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_GAME_CONVERTER);
-		await this.olympediaSportDisciplineConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_SPORT_DISCIPLINE_CONVERTER);
+		//await this.olympediaSportDisciplineConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_SPORT_DISCIPLINE_CONVERTER);
+		await this.olympediaVenueConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_VENUE_CONVERTER);
+		//await this.olympediaEventConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
 	}
 }

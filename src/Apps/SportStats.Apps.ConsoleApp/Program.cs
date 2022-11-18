@@ -110,6 +110,7 @@ public class Program
         services.AddScoped<IGamesService, GamesService>();
         services.AddScoped<ISportsService, SportsService>();
         services.AddScoped<IDisciplinesService, DisciplinesService>();
+        services.AddScoped<IVenuesService, VenuesService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
@@ -127,6 +128,8 @@ public class Program
         services.AddTransient<NOCConverter>();
         services.AddTransient<GameConverter>();
         services.AddTransient<SportDisciplineConverter>();
+        services.AddTransient<VenueConverter>();
+        services.AddTransient<EventConverter>();
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;
