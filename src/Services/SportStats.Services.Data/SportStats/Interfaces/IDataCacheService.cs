@@ -4,5 +4,9 @@ using global::SportStats.Data.Models.Cache;
 
 public interface IDataCacheService
 {
-    ICollection<OGCountryCacheModel> OGCacheCountries { get; }
+    ICollection<OGCountryCacheModel> OGCountriesCache { get; }
+
+    ICollection<OGDisciplineCacheModel> OGDisciplinesCache { get; }
+
+    ICollection<OGGameCacheModel> OGGamesCache { get; }
 }
