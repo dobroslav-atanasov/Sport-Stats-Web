@@ -38,7 +38,7 @@ public class ConverterManager
 		//await this.olympediaNOCConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_NOC_CONVERTER);
 		//await this.olympediaGameConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_GAME_CONVERTER);
 		//await this.olympediaSportDisciplineConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_SPORT_DISCIPLINE_CONVERTER);
-		await this.olympediaVenueConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_VENUE_CONVERTER);
-		//await this.olympediaEventConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
+		//await this.olympediaVenueConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_VENUE_CONVERTER);
+		await this.olympediaEventConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
 	}
 }

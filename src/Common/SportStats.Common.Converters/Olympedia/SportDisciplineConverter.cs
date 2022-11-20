@@ -11,14 +11,14 @@ using SportStats.Services.Data.CrawlerStorage.Interfaces;
 using SportStats.Services.Data.SportStats.Interfaces;
 using SportStats.Services.Interfaces;
 
-public class SportDisciplineConverter : BaseConverter
+public class SportDisciplineConverter : BaseOlympediaConverter
 {
     private readonly ISportsService sportsService;
     private readonly IDisciplinesService disciplinesService;
 
     public SportDisciplineConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService,
-        IZipService zipService, IRegexService regexService, ISportsService sportsService, IDisciplinesService disciplinesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
+        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService, ISportsService sportsService, IDisciplinesService disciplinesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService)
     {
         this.sportsService = sportsService;
         this.disciplinesService = disciplinesService;

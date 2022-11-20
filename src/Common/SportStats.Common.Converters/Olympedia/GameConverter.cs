@@ -12,18 +12,16 @@ using SportStats.Services.Data.CrawlerStorage.Interfaces;
 using SportStats.Services.Data.SportStats.Interfaces;
 using SportStats.Services.Interfaces;
 
-public class GameConverter : BaseConverter
+public class GameConverter : BaseOlympediaConverter
 {
     private readonly INormalizeService normalizeService;
-    private readonly IDataCacheService dataCacheService;
     private readonly IGamesService gamesService;
 
     public GameConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, INormalizeService normalizeService, IDataCacheService dataCacheService, IGamesService gamesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IGamesService gamesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService)
     {
         this.normalizeService = normalizeService;
-        this.dataCacheService = dataCacheService;
         this.gamesService = gamesService;
     }
 
@@ -51,7 +49,7 @@ public class GameConverter : BaseConverter
                 if (hostCityMatch != null)
                 {
                     game.HostCity = this.normalizeService.NormalizeHostCityName(hostCityMatch.Groups[1].Value.Trim());
-                    var country = this.dataCacheService.OGCacheCountries.FirstOrDefault(c => c.Name == hostCityMatch.Groups[2].Value.Trim());
+                    var country = this.DataCacheService.OGCountriesCache.FirstOrDefault(c => c.Name == hostCityMatch.Groups[2].Value.Trim());
                     game.HostCountryId = country.Id;
                     game.OfficialName = this.SetOfficialName(game.HostCity, game.Year);
                 }

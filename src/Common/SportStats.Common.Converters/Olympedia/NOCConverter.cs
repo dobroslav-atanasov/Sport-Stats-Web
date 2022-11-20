@@ -10,14 +10,14 @@ using SportStats.Services.Data.CrawlerStorage.Interfaces;
 using SportStats.Services.Data.SportStats.Interfaces;
 using SportStats.Services.Interfaces;
 
-public class NOCConverter : BaseConverter
+public class NOCConverter : BaseOlympediaConverter
 {
     private readonly ICountriesService countriesService;
     private readonly INormalizeService normalizeService;
 
     public NOCConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, ICountriesService countriesService, INormalizeService normalizeService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
+        IRegexService regexService, IDataCacheService dataCacheService, ICountriesService countriesService, INormalizeService normalizeService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService)
     {
         this.countriesService = countriesService;
         this.normalizeService = normalizeService;
