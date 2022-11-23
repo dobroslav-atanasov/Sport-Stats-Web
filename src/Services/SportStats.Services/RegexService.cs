@@ -7,6 +7,16 @@ using SportStats.Services.Interfaces;
 
 public class RegexService : IRegexService
 {
+    public string CutHtml(string input)
+    {
+        return Regex.Replace(input, "<.*?>", string.Empty);
+    }
+
+    public bool IsMatch(string text, string pattern)
+    {
+        return Regex.IsMatch(text, pattern);
+    }
+
     public Match Match(string text, string pattern)
     {
         var match = Regex.Match(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -16,6 +26,11 @@ public class RegexService : IRegexService
         }
 
         return null;
+    }
+
+    public MatchCollection Matches(string text, string pattern)
+    {
+        return Regex.Matches(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
     }
 
     public string MatchFirstGroup(string text, string pattern)
@@ -33,10 +48,5 @@ public class RegexService : IRegexService
     public string Replace(string text, string pattern, string replacement)
     {
         return Regex.Replace(text, pattern, replacement);
-    }
-
-    public string CutHtml(string input)
-    {
-        return Regex.Replace(input, "<.*?>", string.Empty);
     }
 }

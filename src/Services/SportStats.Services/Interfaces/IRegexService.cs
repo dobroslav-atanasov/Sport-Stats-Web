@@ -11,4 +11,8 @@ public interface IRegexService
     string Replace(string text, string pattern, string replacement);
 
     string CutHtml(string input);
+
+    MatchCollection Matches(string text, string pattern);
+
+    bool IsMatch(string text, string pattern);
 }
