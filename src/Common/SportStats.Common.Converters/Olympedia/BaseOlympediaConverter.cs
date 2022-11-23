@@ -5,6 +5,7 @@ using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 
 using SportStats.Data.Models.Cache;
+using SportStats.Data.Models.Convert;
 using SportStats.Data.Models.Enumerations;
 using SportStats.Services.Data.CrawlerStorage.Interfaces;
 using SportStats.Services.Data.SportStats.Interfaces;
@@ -13,13 +14,16 @@ using SportStats.Services.Interfaces;
 public abstract class BaseOlympediaConverter : BaseConverter
 {
     protected BaseOlympediaConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService,
-        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService)
+        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService)
         : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
     {
         this.DataCacheService = dataCacheService;
+        this.NormalizeService = normalizeService;
     }
 
     protected IDataCacheService DataCacheService { get; }
+
+    protected INormalizeService NormalizeService { get; }
 
     protected OGGameCacheModel FindGame(HtmlDocument htmlDocument)
     {
@@ -74,5 +78,97 @@ public abstract class BaseOlympediaConverter : BaseConverter
         }
 
         return null;
+    }
+
+    protected EventModel CreateEventModel(string originalEventName, OGGameCacheModel gameCache, OGDisciplineCacheModel disciplineCache)
+    {
+        if (gameCache != null && disciplineCache != null)
+        {
+            var eventModel = new EventModel
+            {
+                OriginalName = originalEventName,
+                Name = this.NormalizeService.NormalizeEventName(originalEventName)
+            };
+            eventModel.Name = this.NormalizeService.CleanEventName(eventModel.Name);
+            var parts = eventModel.Name.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var gender = parts.Last().Trim();
+            eventModel.Name = string.Join("|", parts.Take(parts.Count - 1).Select(x => x.Trim()).ToList());
+
+            this.AddInfo(eventModel);
+
+            if (disciplineCache.Name == "Wrestling Freestyle")
+            {
+                eventModel.Name = eventModel.Name.Replace("Freestyle", string.Empty);
+            }
+            else if (disciplineCache.Name == "Wrestling Greco-Roman")
+            {
+                eventModel.Name = eventModel.Name.Replace("Greco-Roman", string.Empty);
+            }
+
+            if (this.RegexService.IsMatch(eventModel.Name, @"Team"))
+            {
+                eventModel.Name = this.RegexService.Replace(eventModel.Name, @"Team", string.Empty);
+                eventModel.Name = $"Team|{eventModel.Name}";
+            }
+
+            var nameParts = eventModel.Name.Split(new[] { " ", "|" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.UpperFirstChar()).ToList();
+            var name = string.Join(" ", nameParts);
+
+            eventModel.Name = $"{gender} {name}";
+            var prefix = this.ConvertEventPrefix(gender);
+            eventModel.NormalizedName = $"{prefix} {name.ToLower()}";
+
+            return eventModel;
+        }
+
+        return null;
+    }
+
+    private string ConvertEventPrefix(string gender)
+    {
+
+        switch (gender.ToLower())
+        {
+            case "men":
+                gender = "Men's";
+                break;
+            case "women":
+                gender = "Women's";
+                break;
+            case "mixed":
+            case "open":
+                gender = "Mixed";
+                break;
+        }
+
+        return gender;
+    }
+
+    private void AddInfo(EventModel eventModel)
+    {
+        var match = this.RegexService.Match(eventModel.Name, @"\(.*?\)");
+        if (match != null)
+        {
+            var text = match.Groups[0].Value;
+            eventModel.Name = eventModel.Name.Replace(text, string.Empty).Trim();
+
+            var poundMatch = this.RegexService.Match(text, @"(\+|-)([\d\.]+)\s*pounds");
+            var kilogramMatch = this.RegexService.Match(text, @"(\+|-)([\d\.]+)\s*kilograms");
+            var otherMatch = this.RegexService.Match(text, @"\((.*?)\)");
+            if (poundMatch != null)
+            {
+                var weight = double.Parse(poundMatch.Groups[2].Value).ConvertPoundToKilograms();
+                eventModel.AdditionalInfo = $"{poundMatch.Groups[1].Value.Trim()}{weight.ToString("F2")}kg";
+            }
+            else if (kilogramMatch != null)
+            {
+                var weight = double.Parse(kilogramMatch.Groups[2].Value);
+                eventModel.AdditionalInfo = $"{kilogramMatch.Groups[1].Value.Trim()}{weight}kg";
+            }
+            else if (otherMatch != null)
+            {
+                eventModel.AdditionalInfo = otherMatch.Value.Replace("(", string.Empty).Replace(")", string.Empty).Trim();
+            }
+        }
     }
 }
