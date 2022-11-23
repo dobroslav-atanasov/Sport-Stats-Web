@@ -1,9 +1,25 @@
 ﻿namespace SportStats.Services;
 
+using System.Text.RegularExpressions;
+
 using SportStats.Services.Interfaces;
 
 public class NormalizeService : INormalizeService
 {
+    public string CleanEventName(string name)
+    {
+        name = name.Replace(" / ", "/")
+            .Replace(" meters", "m")
+            .Replace(" kilometers", "km")
+            .Replace(" miles", "miles")
+            .Replace(" mile", "mile")
+            .Replace(" km", "km")
+            .Replace("Pommelled Horse", "Pommell Horse")
+            .Replace("Teams", "Team");
+
+        return name;
+    }
+
     public string MapOlympicGamesCountriesAndWorldCountries(string code)
     {
         return code switch
@@ -215,6 +231,36 @@ public class NormalizeService : INormalizeService
             "ZIM" => "ZWE",
             _ => null
         };
+    }
+
+    public string NormalizeEventName(string name)
+    {
+        name = Regex.Replace(name, @"(\d+)\s+(\d+)", me =>
+        {
+            return $"{me.Groups[1].Value.Trim()}{me.Groups[2].Value.Trim()}";
+        });
+
+        name = Regex.Replace(name, @"(\d+),(\d+)", me =>
+        {
+            return $"{me.Groups[1].Value.Trim()}{me.Groups[2].Value.Trim()}";
+        });
+
+        name = name.Replace(" x ", "x")
+            .Replace("82½", "82.5")
+            .Replace("67½", "67.5")
+            .Replace("333⅓", "333 1/3")
+            .Replace(" × ", "x")
+            .Replace("¼", "1/4")
+            .Replace("⅓", "1/3")
+            .Replace("½", "1/2")
+            .Replace("²", string.Empty)
+            .Replace("kilometer", "kilometers")
+            .Replace("metres", "meters")
+            .Replace("kilometres", "kilometers")
+            .Replace("≤", "-")
+            .Replace(">", "+");
+
+        return name;
     }
 
     public string NormalizeHostCityName(string hostCity)
