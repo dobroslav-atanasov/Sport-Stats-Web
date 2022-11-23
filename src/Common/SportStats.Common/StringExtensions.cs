@@ -54,4 +54,12 @@ public static class StringExtensions
 
         return month;
     }
+
+    public static string UpperFirstChar(this string text)
+    {
+        var firstChar = text.Substring(0, 1);
+        var otherString = text.Substring(1);
+        var newString = firstChar.ToUpper() + otherString;
+        return newString;
+    }
 }
