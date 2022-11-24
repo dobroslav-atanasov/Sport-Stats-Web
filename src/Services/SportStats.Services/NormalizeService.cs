@@ -15,7 +15,9 @@ public class NormalizeService : INormalizeService
             .Replace(" mile", "mile")
             .Replace(" km", "km")
             .Replace("Pommelled Horse", "Pommell Horse")
-            .Replace("Teams", "Team");
+            .Replace("Teams", "Team")
+            .Replace("Alpine Combined", "Combined")
+            .Replace("Super Combined", "Combined");
 
         return name;
     }
@@ -259,6 +261,17 @@ public class NormalizeService : INormalizeService
             .Replace("kilometres", "kilometers")
             .Replace("≤", "-")
             .Replace(">", "+");
+
+        name = name.Replace(" / ", "/")
+           .Replace(" meters", "m")
+           .Replace(" kilometers", "km")
+           .Replace(" miles", "miles")
+           .Replace(" mile", "mile")
+           .Replace(" km", "km")
+           .Replace("Pommelled Horse", "Pommell Horse")
+           .Replace("Teams", "Team")
+           .Replace("Alpine Combined", "Combined")
+           .Replace("Super Combined", "Combined");
 
         return name;
     }
