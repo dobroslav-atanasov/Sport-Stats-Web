@@ -14,14 +14,12 @@ using SportStats.Services.Interfaces;
 
 public class GameConverter : BaseOlympediaConverter
 {
-    private readonly INormalizeService normalizeService;
     private readonly IGamesService gamesService;
 
     public GameConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
         IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IGamesService gamesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
     {
-        this.normalizeService = normalizeService;
         this.gamesService = gamesService;
     }
 
@@ -48,7 +46,7 @@ public class GameConverter : BaseOlympediaConverter
                 var hostCityMatch = this.RegexService.Match(document.DocumentNode.OuterHtml, @"<tr>\s*<th>Host city<\/th>\s*<td>\s*([\w'\-\s.]+),\s*([\w'\-\s]+)");
                 if (hostCityMatch != null)
                 {
-                    game.HostCity = this.normalizeService.NormalizeHostCityName(hostCityMatch.Groups[1].Value.Trim());
+                    game.HostCity = this.NormalizeService.NormalizeHostCityName(hostCityMatch.Groups[1].Value.Trim());
                     var country = this.DataCacheService.OGCountriesCache.FirstOrDefault(c => c.Name == hostCityMatch.Groups[2].Value.Trim());
                     game.HostCountryId = country.Id;
                     game.OfficialName = this.SetOfficialName(game.HostCity, game.Year);

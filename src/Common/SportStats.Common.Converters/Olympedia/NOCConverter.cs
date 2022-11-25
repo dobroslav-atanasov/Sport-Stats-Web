@@ -13,14 +13,12 @@ using SportStats.Services.Interfaces;
 public class NOCConverter : BaseOlympediaConverter
 {
     private readonly ICountriesService countriesService;
-    private readonly INormalizeService normalizeService;
 
     public NOCConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, ICountriesService countriesService, INormalizeService normalizeService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, ICountriesService countriesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
     {
         this.countriesService = countriesService;
-        this.normalizeService = normalizeService;
     }
 
     protected override async Task ProcessGroupAsync(Group group)
@@ -73,7 +71,7 @@ public class NOCConverter : BaseOlympediaConverter
                     country.CommitteeDescription = !string.IsNullOrEmpty(committeeDescription) ? this.RegexService.CutHtml(committeeDescription) : null;
                 }
 
-                var worldCountryCode = this.normalizeService.MapOlympicGamesCountriesAndWorldCountries(country.Code);
+                var worldCountryCode = this.NormalizeService.MapOlympicGamesCountriesAndWorldCountries(country.Code);
                 if (worldCountryCode != null)
                 {
                     var worldCountry = await this.countriesService.GetWorldCountryAsync(worldCountryCode);

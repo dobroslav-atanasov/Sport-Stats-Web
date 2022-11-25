@@ -12,14 +12,12 @@ using SportStats.Services.Interfaces;
 
 public class VenueConverter : BaseOlympediaConverter
 {
-    private readonly INormalizeService normalizeService;
     private readonly IVenuesService venuesService;
 
     public VenueConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
         IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IVenuesService venuesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
     {
-        this.normalizeService = normalizeService;
         this.venuesService = venuesService;
     }
 
@@ -42,7 +40,7 @@ public class VenueConverter : BaseOlympediaConverter
                 CreatedOn = DateTime.UtcNow,
                 Name = name,
                 Number = number,
-                City = this.normalizeService.NormalizeHostCityName(city),
+                City = this.NormalizeService.NormalizeHostCityName(city),
                 EnglishName = englishName,
                 FullName = fullName,
                 Opened = opened != null ? int.Parse(opened) : null,
