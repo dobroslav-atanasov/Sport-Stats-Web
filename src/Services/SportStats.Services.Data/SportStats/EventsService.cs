@@ -27,7 +27,7 @@ public class EventsService : BaseSportStatsService, IEventsService
     {
         var @event = await this.Context
             .OGEvents
-            .FirstOrDefaultAsync(e => e.Name == name && e.DisciplineId == disciplineId && e.GameId == gameId);
+            .FirstOrDefaultAsync(e => e.OriginalName == name && e.DisciplineId == disciplineId && e.GameId == gameId);
 
         return @event;
     }
