@@ -11,6 +11,10 @@ public class OGEvent : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpd
 {
     [Required]
     [MaxLength(200)]
+    public string OriginalName { get; set; }
+
+    [Required]
+    [MaxLength(200)]
     public string Name { get; set; }
 
     [Required]
@@ -37,7 +41,6 @@ public class OGEvent : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpd
 
     public int Countries { get; set; }
 
-    [MaxLength(1000)]
     public string Format { get; set; }
 
     public string Description { get; set; }
@@ -53,6 +56,18 @@ public class OGEvent : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpd
     public bool Update(OGEvent other)
     {
         var isUpdated = false;
+
+        if (this.Name != other.Name)
+        {
+            this.Name = other.Name;
+            isUpdated = true;
+        }
+
+        if (this.NormalizedName != other.NormalizedName)
+        {
+            this.NormalizedName = other.NormalizedName;
+            isUpdated = true;
+        }
 
         if (this.StartDate != other.StartDate)
         {
