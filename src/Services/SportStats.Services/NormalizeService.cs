@@ -6,21 +6,22 @@ using SportStats.Services.Interfaces;
 
 public class NormalizeService : INormalizeService
 {
-    public string CleanEventName(string name)
-    {
-        name = name.Replace(" / ", "/")
-            .Replace(" meters", "m")
-            .Replace(" kilometers", "km")
-            .Replace(" miles", "miles")
-            .Replace(" mile", "mile")
-            .Replace(" km", "km")
-            .Replace("Pommelled Horse", "Pommell Horse")
-            .Replace("Teams", "Team")
-            .Replace("Alpine Combined", "Combined")
-            .Replace("Super Combined", "Combined");
+    //public string CleanEventName(string name)
+    //{
+    //    name = name.Replace(" / ", "/")
+    //        .Replace(" meters", "m")
+    //        .Replace(" kilometers", "km")
+    //        .Replace(" miles", "miles")
+    //        .Replace(" mile", "mile")
+    //        .Replace(" km", "km")
+    //        .Replace("Pommelled Horse", "Pommel Horse")
+    //        .Replace("Horse Vault", "Vault")
+    //        .Replace("Teams", "Team")
+    //        .Replace("Alpine Combined", "Combined")
+    //        .Replace("Super Combined", "Combined");
 
-        return name;
-    }
+    //    return name;
+    //}
 
     public string MapOlympicGamesCountriesAndWorldCountries(string code)
     {
@@ -235,7 +236,7 @@ public class NormalizeService : INormalizeService
         };
     }
 
-    public string NormalizeEventName(string name)
+    public string NormalizeEventName(string name, int gameYear, string disciplineName)
     {
         name = Regex.Replace(name, @"(\d+)\s+(\d+)", me =>
         {
@@ -263,15 +264,44 @@ public class NormalizeService : INormalizeService
             .Replace(">", "+");
 
         name = name.Replace(" / ", "/")
-           .Replace(" meters", "m")
-           .Replace(" kilometers", "km")
-           .Replace(" miles", "miles")
-           .Replace(" mile", "mile")
-           .Replace(" km", "km")
-           .Replace("Pommelled Horse", "Pommell Horse")
-           .Replace("Teams", "Team")
-           .Replace("Alpine Combined", "Combined")
-           .Replace("Super Combined", "Combined");
+            .Replace(" meters", "m")
+            .Replace(" kilometers", "km")
+            .Replace(" miles", "miles")
+            .Replace(" mile", "mile")
+            .Replace(" km", "km")
+            .Replace("Pommelled Horse", "Pommel Horse")
+            .Replace("Teams", "Team")
+            .Replace("Horse Vault", "Vault")
+            .Replace("Alpine Combined", "Combined")
+            .Replace("Super Combined", "Combined")
+            .Replace("Birds", "Bird")
+            .Replace("Pole Archery", "Fixed")
+            .Replace("Apparatus Work and Field Sports", string.Empty)
+            .Replace("Individual All-Around, Apparatus Work", "Triathlon")
+            .Replace("Individual All-Around, 4 Events", "Combined")
+            .Replace("European System", string.Empty)
+            .Replace("Four/Five", "Four")
+            .Replace("Canadian Singles", "C-1")
+            .Replace("Canadian Doubles", "C-2")
+            .Replace("Kayak Singles", "K-1")
+            .Replace("Kayak Doubles", "K-2")
+            .Replace("Kayak Fours", "K-4")
+            .Replace("Kayak Relay", "K-1")
+            .Replace("Two-Man Teams With Cesta", "Team")
+            .Replace("Eights", "Eight")
+            .Replace("Coxed Fours", "Coxed Four")
+            .Replace("Coxed Pairs", "Coxed Pair")
+            .Replace("Coxless Fours", "Coxless Four")
+            .Replace("Coxless Pairs", "Coxless Pair")
+            .Replace("Covered Courts", "Indoor")
+            //.Replace("", "")
+            //.Replace("", "")
+            .Replace("Target Archery", "Moving Bird");
+
+        if (gameYear == 1924 && disciplineName == "Artistic Gymnastics" && name == "Side Horse, Men")
+        {
+            name = "Pommel Horse, Men";
+        }
 
         return name;
     }

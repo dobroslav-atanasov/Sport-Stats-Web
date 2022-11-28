@@ -5,7 +5,7 @@ public interface INormalizeService
 
     string NormalizeHostCityName(string hostCity);
 
-    string NormalizeEventName(string name);
+    string NormalizeEventName(string name, int gameYear, string disciplineName);
 
-    string CleanEventName(string name);
+    //string CleanEventName(string name);
 }
