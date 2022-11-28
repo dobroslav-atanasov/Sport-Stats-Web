@@ -69,6 +69,10 @@ public abstract class BaseOlympediaConverter : BaseConverter
                     disciplineName = "Wrestling Greco-Roman";
                 }
             }
+            else if (disciplineName.ToLower() == "canoe marathon")
+            {
+                disciplineName = "Canoe Sprint";
+            }
 
             var discipline = this.DataCacheService
                 .OGDisciplinesCache
@@ -87,9 +91,12 @@ public abstract class BaseOlympediaConverter : BaseConverter
             var eventModel = new EventModel
             {
                 OriginalName = originalEventName,
-                Name = this.NormalizeService.NormalizeEventName(originalEventName)
+                GameId = gameCache.Id,
+                GameYear = gameCache.Year,
+                DisciplineId = disciplineCache.Id,
+                DisciplineName = disciplineCache.Name,
+                Name = this.NormalizeService.NormalizeEventName(originalEventName, gameCache.Year, disciplineCache.Name)
             };
-            eventModel.Name = this.NormalizeService.CleanEventName(eventModel.Name);
             var parts = eventModel.Name.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
             var gender = parts.Last().Trim();
             eventModel.Name = string.Join("|", parts.Take(parts.Count - 1).Select(x => x.Trim()).ToList());
@@ -109,6 +116,12 @@ public abstract class BaseOlympediaConverter : BaseConverter
             {
                 eventModel.Name = this.RegexService.Replace(eventModel.Name, @"Team", string.Empty);
                 eventModel.Name = $"Team|{eventModel.Name}";
+            }
+
+            if (this.RegexService.IsMatch(eventModel.Name, @"Individual"))
+            {
+                eventModel.Name = this.RegexService.Replace(eventModel.Name, @"Individual", string.Empty);
+                eventModel.Name = $"Individual|{eventModel.Name}";
             }
 
             var nameParts = eventModel.Name.Split(new[] { " ", "|" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.UpperFirstChar()).ToList();
