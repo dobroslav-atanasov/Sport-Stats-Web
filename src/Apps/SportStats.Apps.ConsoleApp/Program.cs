@@ -99,6 +99,7 @@ public class Program
         services.AddScoped<IRegexService, RegexService>();
         services.AddScoped<IDateService, DateService>();
         services.AddScoped<INormalizeService, NormalizeService>();
+        services.AddScoped<IOlympediaService, OlympediaService>();
 
         // SERVICES DATA
         services.AddScoped<ICrawlersService, CrawlersService>();
@@ -111,6 +112,7 @@ public class Program
         services.AddScoped<ISportsService, SportsService>();
         services.AddScoped<IDisciplinesService, DisciplinesService>();
         services.AddScoped<IVenuesService, VenuesService>();
+        services.AddScoped<IEventsService, EventsService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
