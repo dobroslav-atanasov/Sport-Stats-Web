@@ -9,4 +9,12 @@ public class EventModel
     public string NormalizedName { get; set; }
 
     public string AdditionalInfo { get; set; }
+
+    public int GameId { get; set; }
+
+    public int GameYear { get; set; }
+
+    public int DisciplineId { get; set; }
+
+    public string DisciplineName { get; set; }
 }
