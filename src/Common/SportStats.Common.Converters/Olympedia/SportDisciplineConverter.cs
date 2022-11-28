@@ -98,7 +98,7 @@ public class SportDisciplineConverter : BaseOlympediaConverter
                             });
                         }
 
-                        foreach (var discipline in disciplines)
+                        foreach (var discipline in disciplines.Where(x => x.Name != "Canoe Marathon"))
                         {
                             var dbDiscipline = await this.disciplinesService.GetDisciplineAsync(discipline.Name);
                             if (dbDiscipline == null)

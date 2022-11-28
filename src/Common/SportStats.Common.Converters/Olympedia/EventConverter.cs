@@ -6,6 +6,7 @@ using HtmlAgilityPack;
 
 using Microsoft.Extensions.Logging;
 
+using SportStats.Data.Models.Convert;
 using SportStats.Data.Models.Entities.Crawlers;
 using SportStats.Data.Models.Entities.SportStats;
 using SportStats.Services.Data.CrawlerStorage.Interfaces;
@@ -34,7 +35,7 @@ public class EventConverter : BaseOlympediaConverter
             var ogGameCache = this.FindGame(document);
             var ogDisciplineCache = this.FindDiscipline(document);
             var eventModel = this.CreateEventModel(originalEventName, ogGameCache, ogDisciplineCache);
-            if (eventModel != null)
+            if (eventModel != null && !this.CheckForbiddenEvent(eventModel.OriginalName, ogDisciplineCache.Name, ogGameCache.Year))
             {
                 var @event = new OGEvent
                 {
@@ -45,7 +46,6 @@ public class EventConverter : BaseOlympediaConverter
                     AdditionalInfo = eventModel.AdditionalInfo,
                     DisciplineId = ogDisciplineCache.Id,
                     GameId = ogGameCache.Id,
-
                 };
 
                 this.IsTeamEvent(document, @event);
@@ -82,6 +82,11 @@ public class EventConverter : BaseOlympediaConverter
         }
     }
 
+    private void ChangeName(EventModel eventModel)
+    {
+        throw new NotImplementedException();
+    }
+
     private void IsTeamEvent(HtmlDocument document, OGEvent @event)
     {
         var table = document.DocumentNode.SelectSingleNode("//table[@class='table table-striped']");
@@ -94,5 +99,18 @@ public class EventConverter : BaseOlympediaConverter
         {
             @event.IsTeamEvent = true;
         }
+    }
+
+    private bool CheckForbiddenEvent(string eventName, string disciplineName, int year)
+    {
+        var list = new List<string>
+        {
+            "1900-Archery-Unknown Event, Men",
+            "1920-Shooting-Unknown Event, Men",
+            "1904-Artistic Gymnastics-Individual All-Around, Field Sports, Men"
+        };
+
+        var isForbidden = list.Any(x => x == $"{year}-{disciplineName}-{eventName}");
+        return isForbidden;
     }
 }
