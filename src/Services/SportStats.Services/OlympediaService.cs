@@ -43,4 +43,19 @@ public class OlympediaService : IOlympediaService
 
         return codes;
     }
+
+    public List<int> FindVenues(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return new List<int>();
+        }
+
+        var venues = this.regexService
+            .Matches(text, @"\/venues\/(\d+)")
+            .Select(x => int.Parse(x.Groups[1].Value))?
+            .ToList();
+
+        return venues;
+    }
 }

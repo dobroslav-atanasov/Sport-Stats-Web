@@ -5,4 +5,6 @@ public interface IOlympediaService
     IList<int> FindAthleteNumbers(string text);
 
     IList<string> FindCountryCodes(string text);
+
+    List<int> FindVenues(string text);
 }
