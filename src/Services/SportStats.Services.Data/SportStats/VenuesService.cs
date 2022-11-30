@@ -1,10 +1,13 @@
 ﻿namespace SportStats.Services.Data.SportStats;
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using global::SportStats.Data.Contexts;
+using global::SportStats.Data.Models.Cache;
 using global::SportStats.Data.Models.Entities.SportStats;
 using global::SportStats.Services.Data.SportStats.Interfaces;
+using global::SportStats.Services.Mapper.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +24,17 @@ public class VenuesService : BaseSportStatsService, IVenuesService
         await this.Context.SaveChangesAsync();
 
         return entity;
+    }
+
+    public ICollection<OGVenueCacheModel> GetOGVenuesCache()
+    {
+        var venues = this.Context
+            .OGVenues
+            .AsNoTracking()
+            .To<OGVenueCacheModel>()
+            .ToList();
+
+        return venues;
     }
 
     public async Task<OGVenue> GetVenueAsync(int number)
