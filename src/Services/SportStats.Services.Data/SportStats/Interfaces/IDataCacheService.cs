@@ -9,4 +9,6 @@ public interface IDataCacheService
     ICollection<OGDisciplineCacheModel> OGDisciplinesCache { get; }
 
     ICollection<OGGameCacheModel> OGGamesCache { get; }
+
+    ICollection<OGVenueCacheModel> OGVenuesCache { get; }
 }
