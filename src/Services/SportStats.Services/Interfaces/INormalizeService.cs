@@ -1,4 +1,7 @@
 ﻿namespace SportStats.Services.Interfaces;
+
+using SportStats.Data.Models.Enumerations;
+
 public interface INormalizeService
 {
     string MapOlympicGamesCountriesAndWorldCountries(string code);
@@ -7,5 +10,7 @@ public interface INormalizeService
 
     string NormalizeEventName(string name, int gameYear, string disciplineName);
 
-    //string CleanEventName(string name);
+    string ReplaceNonEnglishLetters(string name);
+
+    AthleteType MapAthleteType(string text);
 }
