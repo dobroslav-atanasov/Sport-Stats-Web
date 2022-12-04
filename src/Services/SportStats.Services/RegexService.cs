@@ -9,6 +9,11 @@ public class RegexService : IRegexService
 {
     public string CutHtml(string input)
     {
+        if (string.IsNullOrEmpty(input))
+        {
+            return null;
+        }
+
         return Regex.Replace(input, "<.*?>", string.Empty);
     }
 
