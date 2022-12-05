@@ -14,6 +14,20 @@ public class DateService : IDateService
         this.regexService = regexService;
     }
 
+    public DateTime? MatchDate(string text)
+    {
+        var match = this.regexService.Match(text, @"(\d+)\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s*(\d{4})");
+        if (match != null)
+        {
+            var day = int.Parse(match.Groups[1].Value);
+            var month = match.Groups[2].Value.GetMonthNumber();
+            var year = int.Parse(match.Groups[3].Value);
+            return new DateTime(year, month, day);
+        }
+
+        return null;
+    }
+
     public Tuple<DateTime?, DateTime?> MatchStartAndEndDate(string text)
     {
         text = text.Replace("–", string.Empty);
