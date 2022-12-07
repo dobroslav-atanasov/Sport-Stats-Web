@@ -15,6 +15,8 @@ using SportStats.Common.Crawlers;
 using SportStats.Common.Crawlers.Countries;
 using SportStats.Common.Crawlers.Olympedia;
 using SportStats.Data.Contexts;
+using SportStats.Data.Factory;
+using SportStats.Data.Factory.Interfaces;
 using SportStats.Data.Seeders;
 using SportStats.Data.Seeders.Interfaces;
 using SportStats.Services;
@@ -74,6 +76,20 @@ public class Program
         MapperConfig.RegisterMapper(Assembly.Load(AppGlobalConstants.AUTOMAPPER_MODELS_ASSEMBLY));
 
         // DATABASES
+        var sportStatsOptions = new DbContextOptionsBuilder<SportStatsDbContext>()
+            .UseLazyLoadingProxies(true)
+            .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.SPORT_STATS_CONNECTION_STRING))
+            .Options;
+
+        var crawlerStorageOptions = new DbContextOptionsBuilder<CrawlerStorageDbContext>()
+            .UseLazyLoadingProxies(true)
+            .UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_STORAGE_CONNECTION_STRING))
+            .Options;
+
+        var dbContextFactory = new DbContextFactory(crawlerStorageOptions, sportStatsOptions);
+        services.AddSingleton<IDbContextFactory>(dbContextFactory);
+
+
         services.AddDbContext<CrawlerStorageDbContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString(AppGlobalConstants.CRAWLER_STORAGE_CONNECTION_STRING));
@@ -113,6 +129,9 @@ public class Program
         services.AddScoped<IDisciplinesService, DisciplinesService>();
         services.AddScoped<IVenuesService, VenuesService>();
         services.AddScoped<IEventsService, EventsService>();
+        services.AddScoped<IEventVenueService, EventVenueService>();
+        services.AddScoped<IAthletesService, AthletesService>();
+        services.AddScoped<IAthleteCountryService, AthleteCountryService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
@@ -132,6 +151,8 @@ public class Program
         services.AddTransient<SportDisciplineConverter>();
         services.AddTransient<VenueConverter>();
         services.AddTransient<EventConverter>();
+        services.AddTransient<AthleteConverter>();
+        services.AddTransient<ParticipantConverter>();
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;
