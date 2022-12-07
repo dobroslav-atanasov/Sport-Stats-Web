@@ -1,6 +1,9 @@
 ﻿namespace SportStats.Data.Models.Cache;
 
-public class OGVenueCacheModel
+using SportStats.Data.Models.Entities.SportStats;
+using SportStats.Services.Mapper.Interfaces;
+
+public class OGVenueCacheModel : IMapFrom<OGVenue>
 {
     public int Id { get; set; }
 
