@@ -6,7 +6,6 @@ using HtmlAgilityPack;
 
 using Microsoft.Extensions.Logging;
 
-using SportStats.Data.Models.Convert;
 using SportStats.Data.Models.Entities.Crawlers;
 using SportStats.Data.Models.Entities.SportStats;
 using SportStats.Services.Data.CrawlerStorage.Interfaces;
@@ -17,13 +16,18 @@ public class EventConverter : BaseOlympediaConverter
 {
     private readonly IEventsService eventsService;
     private readonly IOlympediaService olympediaService;
+    private readonly IDateService dateService;
+    private readonly IEventVenueService eventVenueService;
 
     public EventConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IEventsService eventsService, IOlympediaService olympediaService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IEventsService eventsService, IOlympediaService olympediaService,
+        IDateService dateService, IEventVenueService eventVenueService)
         : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
     {
         this.eventsService = eventsService;
         this.olympediaService = olympediaService;
+        this.dateService = dateService;
+        this.eventVenueService = eventVenueService;
     }
 
     protected override async Task ProcessGroupAsync(Group group)
@@ -49,9 +53,17 @@ public class EventConverter : BaseOlympediaConverter
                 };
 
                 this.IsTeamEvent(document, @event);
-                // start date
 
-                // end date
+                var dateMatch = this.RegexService.Match(document.DocumentNode.OuterHtml, @"<tr>\s*<th>Date<\/th>\s*<td>(.*?)<\/td>\s*<\/tr>");
+                if (dateMatch != null)
+                {
+                    var dates = this.dateService.MatchStartAndEndDate(dateMatch.Groups[1].Value.Trim());
+                    if (dates != null)
+                    {
+                        @event.StartDate = dates.Item1;
+                        @event.EndDate = dates.Item2;
+                    }
+                }
 
                 var format = this.RegexService.MatchFirstGroup(document.DocumentNode.OuterHtml, @"<tr>\s*<th>Format<\/th>\s*<td colspan=""2"">(.*?)<\/td>\s*<\/tr>");
                 @event.Format = format;
@@ -74,6 +86,8 @@ public class EventConverter : BaseOlympediaConverter
                         this.Logger.LogInformation($"Updated event: {dbEvent.Name}");
                     }
                 }
+
+                await this.ProcessEventVenueAsync(document, @event, dbEvent);
             }
         }
         catch (Exception ex)
@@ -82,9 +96,24 @@ public class EventConverter : BaseOlympediaConverter
         }
     }
 
-    private void ChangeName(EventModel eventModel)
+    private async Task ProcessEventVenueAsync(HtmlDocument document, OGEvent @event, OGEvent dbEvent)
     {
-        throw new NotImplementedException();
+        var locationMatch = this.RegexService.Match(document.DocumentNode.OuterHtml, @"<tr>\s*<th>Location<\/th>\s*<td>(.*?)<\/td>\s*<\/tr>");
+        var eventId = dbEvent != null ? dbEvent.Id : @event.Id;
+        if (locationMatch != null)
+        {
+            var venues = this.olympediaService.FindVenues(locationMatch.Groups[1].Value);
+
+            foreach (var venue in venues)
+            {
+                var venueCache = this.DataCacheService.OGVenuesCache.FirstOrDefault(v => v.Number == venue);
+                if (venueCache != null && !this.eventVenueService.EventVenueExists(@event.Id, venueCache.Id))
+                {
+                    await this.eventVenueService.AddAsync(new OGEventVenue { EventId = eventId, VenueId = venueCache.Id });
+                    this.Logger.LogInformation($"Added event: {eventId} and venue: {venueCache.Id}");
+                }
+            }
+        }
     }
 
     private void IsTeamEvent(HtmlDocument document, OGEvent @event)
@@ -99,18 +128,5 @@ public class EventConverter : BaseOlympediaConverter
         {
             @event.IsTeamEvent = true;
         }
-    }
-
-    private bool CheckForbiddenEvent(string eventName, string disciplineName, int year)
-    {
-        var list = new List<string>
-        {
-            "1900-Archery-Unknown Event, Men",
-            "1920-Shooting-Unknown Event, Men",
-            "1904-Artistic Gymnastics-Individual All-Around, Field Sports, Men"
-        };
-
-        var isForbidden = list.Any(x => x == $"{year}-{disciplineName}-{eventName}");
-        return isForbidden;
     }
 }

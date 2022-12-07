@@ -1,5 +1,9 @@
 ﻿namespace SportStats.Common.Converters.Olympedia;
 
+using System;
+
+using HtmlAgilityPack;
+
 using Microsoft.Extensions.Logging;
 
 using SportStats.Data.Models.Entities.Crawlers;
@@ -13,13 +17,18 @@ public class AthleteConverter : BaseOlympediaConverter
 {
     private readonly IAthletesService athletesService;
     private readonly IDateService dateService;
+    private readonly IOlympediaService olympediaService;
+    private readonly IAthleteCountryService athleteCountryService;
 
     public AthleteConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IAthletesService athletesService, IDateService dateService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IAthletesService athletesService, IDateService dateService,
+        IOlympediaService olympediaService, IAthleteCountryService athleteCountryService)
         : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
     {
         this.athletesService = athletesService;
         this.dateService = dateService;
+        this.olympediaService = olympediaService;
+        this.athleteCountryService = athleteCountryService;
     }
 
     protected override async Task ProcessGroupAsync(Group group)
@@ -100,10 +109,31 @@ public class AthleteConverter : BaseOlympediaConverter
                     this.Logger.LogInformation($"Updated athlete: {athlete.Number}");
                 }
             }
+
+            await this.ProcessAthleteCountryAsync(document, athlete, dbAthlete);
         }
         catch (Exception ex)
         {
             this.Logger.LogError(ex, $"Failed to process group: {group.Identifier}");
+        }
+    }
+
+    private async Task ProcessAthleteCountryAsync(HtmlDocument document, OGAthlete athlete, OGAthlete dbAthlete)
+    {
+        var nocMatch = this.RegexService.Match(document.ParsedText, @"<tr>\s*<th>NOC(?:\(s\))?<\/th>\s*<td>(.*?)<\/td>\s*<\/tr>");
+        var athleteId = dbAthlete != null ? dbAthlete.Id : athlete.Id;
+        if (nocMatch != null)
+        {
+            var countryCodes = this.olympediaService.FindCountryCodes(nocMatch.Groups[1].Value);
+            foreach (var code in countryCodes)
+            {
+                var countryCache = this.DataCacheService.OGCountriesCache.FirstOrDefault(c => c.Code == code);
+                if (countryCache != null && !this.athleteCountryService.AthleteCountryExists(athleteId, countryCache.Id))
+                {
+                    await this.athleteCountryService.AddAsync(new OGAthleteCountry { AthleteId = athleteId, CountryId = countryCache.Id });
+                    this.Logger.LogInformation($"Added athlete: {athleteId} and country: {code}");
+                }
+            }
         }
     }
 

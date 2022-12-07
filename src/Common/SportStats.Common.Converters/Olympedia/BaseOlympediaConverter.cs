@@ -137,6 +137,19 @@ public abstract class BaseOlympediaConverter : BaseConverter
         return null;
     }
 
+    protected bool CheckForbiddenEvent(string eventName, string disciplineName, int year)
+    {
+        var list = new List<string>
+        {
+            "1900-Archery-Unknown Event, Men",
+            "1920-Shooting-Unknown Event, Men",
+            "1904-Artistic Gymnastics-Individual All-Around, Field Sports, Men"
+        };
+
+        var isForbidden = list.Any(x => x == $"{year}-{disciplineName}-{eventName}");
+        return isForbidden;
+    }
+
     private string ConvertEventPrefix(string gender)
     {
 
