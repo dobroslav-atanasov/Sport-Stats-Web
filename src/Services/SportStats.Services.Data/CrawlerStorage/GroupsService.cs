@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using global::SportStats.Data.Contexts;
+using global::SportStats.Data.Factory.Interfaces;
 using global::SportStats.Data.Models.Entities.Crawlers;
 using global::SportStats.Data.Models.Enumerations;
 using global::SportStats.Services.Data.CrawlerStorage.Interfaces;
@@ -18,20 +19,24 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
     private readonly IZipService zipService;
     private readonly IMD5Hash hasher;
     private readonly ILogsService logsService;
+    private readonly IDbContextFactory dbContextFactory;
 
-    public GroupsService(CrawlerStorageDbContext context, ILogger<GroupsService> logger, IZipService zipService, IMD5Hash hasher, ILogsService logsService)
+    public GroupsService(CrawlerStorageDbContext context, ILogger<GroupsService> logger, IZipService zipService, IMD5Hash hasher, ILogsService logsService,
+        IDbContextFactory dbContextFactory)
         : base(context)
     {
         this.logger = logger;
         this.zipService = zipService;
         this.hasher = hasher;
         this.logsService = logsService;
+        this.dbContextFactory = dbContextFactory;
     }
 
     public async Task AddGroupAsync(Group group)
     {
-        await this.Context.AddAsync(group);
-        await this.Context.SaveChangesAsync();
+        using var context = this.dbContextFactory.CreateCrawlerStorageDbContext();
+        await context.AddAsync(group);
+        await context.SaveChangesAsync();
     }
 
     public async Task AddOrUpdateGroupAsync(Group group)
@@ -106,7 +111,9 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
 
     public async Task<Group> GetGroupAsync(int crawlerId, string name)
     {
-        var group = await this.Context
+        using var context = this.dbContextFactory.CreateCrawlerStorageDbContext();
+
+        var group = await context
             .Groups
             .FirstOrDefaultAsync(g => g.CrawlerId == crawlerId && g.Name == name);
 
@@ -115,8 +122,11 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
 
     public async Task<Group> GetGroupAsync(Guid identifier)
     {
-        var group = await this.Context
+        using var context = this.dbContextFactory.CreateCrawlerStorageDbContext();
+
+        var group = await context
             .Groups
+            .Include(x => x.Documents)
             .FirstOrDefaultAsync(g => g.Identifier == identifier);
 
         return group;
@@ -124,7 +134,9 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
 
     public async Task<IList<string>> GetGroupNamesAsync(int crawlerId)
     {
-        var groups = await this.Context
+        using var context = this.dbContextFactory.CreateCrawlerStorageDbContext();
+
+        var groups = await context
             .Groups
             .Where(g => g.CrawlerId == crawlerId)
             .Select(g => g.Name)
@@ -135,11 +147,13 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
 
     public async Task UpdateGroupAsync(Group newGroup, Group oldGroup)
     {
-        var group = await this.Context
+        using var context = this.dbContextFactory.CreateCrawlerStorageDbContext();
+
+        var group = await context
             .Groups
             .SingleAsync(g => g.Identifier == oldGroup.Identifier);
 
-        await this.Context
+        await context
             .Entry(group)
             .Collection(g => g.Documents)
             .LoadAsync();
@@ -184,7 +198,7 @@ public class GroupsService : BaseCrawlerStorageService, IGroupsService
             }
         }
 
-        await this.Context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     private bool CheckForUpdate(Group group, Group dbGroup)
