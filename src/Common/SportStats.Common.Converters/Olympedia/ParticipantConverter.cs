@@ -26,6 +26,10 @@ public class ParticipantConverter : BaseOlympediaConverter
             var ogGameCache = this.FindGame(document);
             var ogDisciplineCache = this.FindDiscipline(document);
             var eventModel = this.CreateEventModel(originalEventName, ogGameCache, ogDisciplineCache);
+            if (eventModel != null && !this.CheckForbiddenEvent(eventModel.OriginalName, ogDisciplineCache.Name, ogGameCache.Year))
+            {
+                @event
+            }
             ;
         }
         catch (Exception ex)

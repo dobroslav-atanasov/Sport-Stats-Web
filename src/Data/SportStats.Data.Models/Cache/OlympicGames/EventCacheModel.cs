@@ -2,4 +2,7 @@
 
 public class EventCacheModel
 {
+    public int Id { get; set; }
+
+    public string MyProperty { get; set; }
 }
