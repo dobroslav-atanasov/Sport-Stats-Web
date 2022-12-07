@@ -27,8 +27,10 @@ public class OGEvent : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpd
     public int GameId { get; set; }
     public virtual OGGame Game { get; set; }
 
+    [Column(TypeName = "Date")]
     public DateTime? StartDate { get; set; }
 
+    [Column(TypeName = "Date")]
     public DateTime? EndDate { get; set; }
 
     [Required]
