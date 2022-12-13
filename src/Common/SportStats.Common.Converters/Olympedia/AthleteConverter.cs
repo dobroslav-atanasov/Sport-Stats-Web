@@ -127,7 +127,7 @@ public class AthleteConverter : BaseOlympediaConverter
             var countryCodes = this.olympediaService.FindCountryCodes(nocMatch.Groups[1].Value);
             foreach (var code in countryCodes)
             {
-                var countryCache = this.DataCacheService.OGCountriesCache.FirstOrDefault(c => c.Code == code);
+                var countryCache = this.DataCacheService.CountryCacheModels.FirstOrDefault(c => c.Code == code);
                 if (countryCache != null && !this.athleteCountryService.AthleteCountryExists(athleteId, countryCache.Id))
                 {
                     await this.athleteCountryService.AddAsync(new OGAthleteCountry { AthleteId = athleteId, CountryId = countryCache.Id });
