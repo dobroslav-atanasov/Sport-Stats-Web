@@ -4,7 +4,7 @@ using HtmlAgilityPack;
 
 using Microsoft.Extensions.Logging;
 
-using SportStats.Data.Models.Cache;
+using SportStats.Data.Models.Cache.OlympicGames;
 using SportStats.Data.Models.Convert;
 using SportStats.Data.Models.Enumerations;
 using SportStats.Services.Data.CrawlerStorage.Interfaces;
@@ -25,7 +25,7 @@ public abstract class BaseOlympediaConverter : BaseConverter
 
     protected INormalizeService NormalizeService { get; }
 
-    protected OGGameCacheModel FindGame(HtmlDocument htmlDocument)
+    protected GameCacheModel FindGame(HtmlDocument htmlDocument)
     {
         var headers = htmlDocument.DocumentNode.SelectSingleNode("//ol[@class='breadcrumb']");
         var gameMatch = this.RegexService.Match(headers.OuterHtml, @"<a href=""\/editions\/(?:\d+)"">(\d+)\s*(\w+)\s*Olympics<\/a>");
@@ -41,7 +41,7 @@ public abstract class BaseOlympediaConverter : BaseConverter
             }
 
             var game = this.DataCacheService
-                .OGGamesCache
+                .GameCacheModels
                 .FirstOrDefault(g => g.Year == gameYear && g.Type == gameType.ToEnum<OlympicGameType>());
 
             return game;
@@ -50,7 +50,7 @@ public abstract class BaseOlympediaConverter : BaseConverter
         return null;
     }
 
-    protected OGDisciplineCacheModel FindDiscipline(HtmlDocument htmlDocument)
+    protected DisciplineCacheModel FindDiscipline(HtmlDocument htmlDocument)
     {
         var headers = htmlDocument.DocumentNode.SelectSingleNode("//ol[@class='breadcrumb']");
         var disciplineName = this.RegexService.MatchFirstGroup(headers.OuterHtml, @"<a href=""\/editions\/[\d]+\/sports\/(?:.*?)"">(.*?)<\/a>");
@@ -75,7 +75,7 @@ public abstract class BaseOlympediaConverter : BaseConverter
             }
 
             var discipline = this.DataCacheService
-                .OGDisciplinesCache
+                .DisciplineCacheModels
                 .FirstOrDefault(d => d.Name == disciplineName);
 
             return discipline;
@@ -84,7 +84,7 @@ public abstract class BaseOlympediaConverter : BaseConverter
         return null;
     }
 
-    protected EventModel CreateEventModel(string originalEventName, OGGameCacheModel gameCache, OGDisciplineCacheModel disciplineCache)
+    protected EventModel CreateEventModel(string originalEventName, GameCacheModel gameCache, DisciplineCacheModel disciplineCache)
     {
         if (gameCache != null && disciplineCache != null)
         {
