@@ -7,4 +7,8 @@ public interface IOlympediaService
     IList<string> FindCountryCodes(string text);
 
     List<int> FindVenues(string text);
+
+    int FindAthleteNumber(string text);
+
+    string FindCountryCode(string text);
 }
