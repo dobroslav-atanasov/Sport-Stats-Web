@@ -13,6 +13,20 @@ public class OlympediaService : IOlympediaService
         this.regexService = regexService;
     }
 
+    public int FindAthleteNumber(string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+        {
+            var numberMatch = this.regexService.Match(text, @"<a href=""\/athletes\/(\d+)"">");
+            if (numberMatch != null)
+            {
+                return int.Parse(numberMatch.Groups[1].Value);
+            }
+        }
+
+        return 0;
+    }
+
     public IList<int> FindAthleteNumbers(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -26,6 +40,18 @@ public class OlympediaService : IOlympediaService
             .ToList();
 
         return numbers;
+    }
+
+    public string FindCountryCode(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
+
+        var numberMatch = this.regexService.Match(text, @"<a href=""\/countries\/(.*?)"">");
+
+        return numberMatch.Groups[1].Value;
     }
 
     public IList<string> FindCountryCodes(string text)
