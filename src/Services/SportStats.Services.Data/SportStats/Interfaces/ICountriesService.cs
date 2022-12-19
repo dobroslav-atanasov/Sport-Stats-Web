@@ -1,6 +1,6 @@
 ﻿namespace SportStats.Services.Data.SportStats.Interfaces;
 
-using global::SportStats.Data.Models.Cache;
+using global::SportStats.Data.Models.Cache.OlympicGames;
 using global::SportStats.Data.Models.Entities.SportStats;
 
 public interface ICountriesService : IAddable, IUpdatable
@@ -9,5 +9,5 @@ public interface ICountriesService : IAddable, IUpdatable
 
     Task<OGCountry> GetOlympicGameCountryAsync(string code);
 
-    ICollection<OGCountryCacheModel> GetOGCountriesCache();
+    ICollection<CountryCacheModel> GetCountryCacheModels();
 }
