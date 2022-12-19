@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using global::SportStats.Data.Contexts;
-using global::SportStats.Data.Models.Cache;
+using global::SportStats.Data.Models.Cache.OlympicGames;
 using global::SportStats.Data.Models.Entities.SportStats;
 using global::SportStats.Data.Models.Enumerations;
 using global::SportStats.Services.Data.SportStats.Interfaces;
@@ -36,12 +36,12 @@ public class GamesService : BaseSportStatsService, IGamesService
         return game;
     }
 
-    public ICollection<OGGameCacheModel> GetOGGamesCache()
+    public ICollection<GameCacheModel> GetGameCacheModels()
     {
         var games = this.Context
             .OGGames
             .AsNoTracking()
-            .To<OGGameCacheModel>()
+            .To<GameCacheModel>()
             .ToList();
 
         return games;
