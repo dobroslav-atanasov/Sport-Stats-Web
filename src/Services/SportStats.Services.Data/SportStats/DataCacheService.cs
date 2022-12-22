@@ -1,36 +1,43 @@
 ﻿namespace SportStats.Services.Data.SportStats;
 
-using global::SportStats.Data.Models.Cache;
+using global::SportStats.Data.Models.Cache.OlympicGames;
 using global::SportStats.Services.Data.SportStats.Interfaces;
 
 public class DataCacheService : IDataCacheService
 {
-    private readonly Lazy<ICollection<OGCountryCacheModel>> ogCountryCacheModels;
-    private readonly Lazy<ICollection<OGDisciplineCacheModel>> ogDisciplineCacheModels;
-    private readonly Lazy<ICollection<OGGameCacheModel>> ogGameCacheModels;
-    private readonly Lazy<ICollection<OGVenueCacheModel>> ogVenueCacheModels;
+    private readonly Lazy<ICollection<CountryCacheModel>> countryCacheModels;
+    private readonly Lazy<ICollection<DisciplineCacheModel>> diciplineCacheModels;
+    private readonly Lazy<ICollection<GameCacheModel>> gameCacheModels;
+    private readonly Lazy<ICollection<VenueCacheModel>> venueCacheModels;
+    private readonly Lazy<ICollection<EventCacheModel>> eventCacheModels;
     private readonly ICountriesService countriesService;
     private readonly IDisciplinesService disciplinesService;
     private readonly IGamesService gamesService;
     private readonly IVenuesService venuesService;
+    private readonly IEventsService eventsService;
 
-    public DataCacheService(ICountriesService countriesService, IDisciplinesService disciplinesService, IGamesService gamesService, IVenuesService venuesService)
+    public DataCacheService(ICountriesService countriesService, IDisciplinesService disciplinesService, IGamesService gamesService, IVenuesService venuesService,
+        IEventsService eventsService)
     {
         this.countriesService = countriesService;
         this.disciplinesService = disciplinesService;
         this.gamesService = gamesService;
         this.venuesService = venuesService;
-        this.ogCountryCacheModels = new Lazy<ICollection<OGCountryCacheModel>>(() => this.countriesService.GetOGCountriesCache());
-        this.ogDisciplineCacheModels = new Lazy<ICollection<OGDisciplineCacheModel>>(() => this.disciplinesService.GetOGDisciplinesCache());
-        this.ogGameCacheModels = new Lazy<ICollection<OGGameCacheModel>>(() => this.gamesService.GetOGGamesCache());
-        this.ogVenueCacheModels = new Lazy<ICollection<OGVenueCacheModel>>(() => this.venuesService.GetOGVenuesCache());
+        this.eventsService = eventsService;
+        this.countryCacheModels = new Lazy<ICollection<CountryCacheModel>>(() => this.countriesService.GetCountryCacheModels());
+        this.diciplineCacheModels = new Lazy<ICollection<DisciplineCacheModel>>(() => this.disciplinesService.GetDisciplineCacheModels());
+        this.gameCacheModels = new Lazy<ICollection<GameCacheModel>>(() => this.gamesService.GetGameCacheModels());
+        this.venueCacheModels = new Lazy<ICollection<VenueCacheModel>>(() => this.venuesService.GetVenueCacheModels());
+        this.eventCacheModels = new Lazy<ICollection<EventCacheModel>>(() => this.eventsService.GetEventCacheModels());
     }
 
-    public ICollection<OGCountryCacheModel> OGCountriesCache => this.ogCountryCacheModels.Value;
+    public ICollection<CountryCacheModel> CountryCacheModels => this.countryCacheModels.Value;
 
-    public ICollection<OGDisciplineCacheModel> OGDisciplinesCache => this.ogDisciplineCacheModels.Value;
+    public ICollection<DisciplineCacheModel> DisciplineCacheModels => this.diciplineCacheModels.Value;
 
-    public ICollection<OGGameCacheModel> OGGamesCache => this.ogGameCacheModels.Value;
+    public ICollection<GameCacheModel> GameCacheModels => this.gameCacheModels.Value;
 
-    public ICollection<OGVenueCacheModel> OGVenuesCache => this.ogVenueCacheModels.Value;
+    public ICollection<VenueCacheModel> VenueCacheModels => this.venueCacheModels.Value;
+
+    public ICollection<EventCacheModel> EventCacheModels => this.eventCacheModels.Value;
 }
