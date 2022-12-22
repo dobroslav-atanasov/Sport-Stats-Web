@@ -132,6 +132,9 @@ public class Program
         services.AddScoped<IEventVenueService, EventVenueService>();
         services.AddScoped<IAthletesService, AthletesService>();
         services.AddScoped<IAthleteCountryService, AthleteCountryService>();
+        services.AddScoped<IParticipantsService, ParticipantsService>();
+        services.AddScoped<ITeamsService, TeamsService>();
+        services.AddScoped<ISquadsService, SquadsService>();
 
         // CRAWLERS
         services.AddTransient<CrawlerManager>();
