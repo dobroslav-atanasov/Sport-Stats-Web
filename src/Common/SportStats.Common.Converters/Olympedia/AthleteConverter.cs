@@ -17,17 +17,15 @@ public class AthleteConverter : BaseOlympediaConverter
 {
     private readonly IAthletesService athletesService;
     private readonly IDateService dateService;
-    private readonly IOlympediaService olympediaService;
     private readonly IAthleteCountryService athleteCountryService;
 
     public AthleteConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IAthletesService athletesService, IDateService dateService,
-        IOlympediaService olympediaService, IAthleteCountryService athleteCountryService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService,
+        IAthletesService athletesService, IDateService dateService, IAthleteCountryService athleteCountryService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService, olympediaService)
     {
         this.athletesService = athletesService;
         this.dateService = dateService;
-        this.olympediaService = olympediaService;
         this.athleteCountryService = athleteCountryService;
     }
 
@@ -124,7 +122,7 @@ public class AthleteConverter : BaseOlympediaConverter
         var athleteId = dbAthlete != null ? dbAthlete.Id : athlete.Id;
         if (nocMatch != null)
         {
-            var countryCodes = this.olympediaService.FindCountryCodes(nocMatch.Groups[1].Value);
+            var countryCodes = this.OlympediaService.FindCountryCodes(nocMatch.Groups[1].Value);
             foreach (var code in countryCodes)
             {
                 var countryCache = this.DataCacheService.CountryCacheModels.FirstOrDefault(c => c.Code == code);
