@@ -15,17 +15,15 @@ using SportStats.Services.Interfaces;
 public class EventConverter : BaseOlympediaConverter
 {
     private readonly IEventsService eventsService;
-    private readonly IOlympediaService olympediaService;
     private readonly IDateService dateService;
     private readonly IEventVenueService eventVenueService;
 
     public EventConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IEventsService eventsService, IOlympediaService olympediaService,
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService, IEventsService eventsService,
         IDateService dateService, IEventVenueService eventVenueService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService, olympediaService)
     {
         this.eventsService = eventsService;
-        this.olympediaService = olympediaService;
         this.dateService = dateService;
         this.eventVenueService = eventVenueService;
     }
@@ -102,11 +100,11 @@ public class EventConverter : BaseOlympediaConverter
         var eventId = dbEvent != null ? dbEvent.Id : @event.Id;
         if (locationMatch != null)
         {
-            var venues = this.olympediaService.FindVenues(locationMatch.Groups[1].Value);
+            var venues = this.OlympediaService.FindVenues(locationMatch.Groups[1].Value);
 
             foreach (var venue in venues)
             {
-                var venueCache = this.DataCacheService.OGVenuesCache.FirstOrDefault(v => v.Number == venue);
+                var venueCache = this.DataCacheService.VenueCacheModels.FirstOrDefault(v => v.Number == venue);
                 if (venueCache != null && !this.eventVenueService.EventVenueExists(@event.Id, venueCache.Id))
                 {
                     await this.eventVenueService.AddAsync(new OGEventVenue { EventId = eventId, VenueId = venueCache.Id });
@@ -121,12 +119,17 @@ public class EventConverter : BaseOlympediaConverter
         var table = document.DocumentNode.SelectSingleNode("//table[@class='table table-striped']");
         var rows = table.Elements("tr");
 
-        var athletes = this.olympediaService.FindAthleteNumbers(table.OuterHtml);
-        var codes = this.olympediaService.FindCountryCodes(table.OuterHtml);
+        var athletes = this.OlympediaService.FindAthleteNumbers(table.OuterHtml);
+        var codes = this.OlympediaService.FindCountryCodes(table.OuterHtml);
 
         if (athletes.Count != codes.Count)
         {
             @event.IsTeamEvent = true;
+        }
+
+        if (@event.NormalizedName.ToLower().Contains("individual"))
+        {
+            @event.IsTeamEvent = false;
         }
     }
 }
