@@ -14,16 +14,19 @@ using SportStats.Services.Interfaces;
 public abstract class BaseOlympediaConverter : BaseConverter
 {
     protected BaseOlympediaConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService,
-        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService)
+        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService)
         : base(logger, crawlersService, logsService, groupsService, zipService, regexService)
     {
         this.DataCacheService = dataCacheService;
         this.NormalizeService = normalizeService;
+        OlympediaService = olympediaService;
     }
 
     protected IDataCacheService DataCacheService { get; }
 
     protected INormalizeService NormalizeService { get; }
+
+    protected IOlympediaService OlympediaService { get; }
 
     protected GameCacheModel FindGame(HtmlDocument htmlDocument)
     {
@@ -148,6 +151,21 @@ public abstract class BaseOlympediaConverter : BaseConverter
 
         var isForbidden = list.Any(x => x == $"{year}-{disciplineName}-{eventName}");
         return isForbidden;
+    }
+
+    protected Dictionary<string, int> GetHeaderIndexes(HtmlDocument document)
+    {
+        var headers = document
+            .DocumentNode
+            .SelectSingleNode("//table[@class='table table-striped']/thead/tr")
+            .Elements("th")
+            .Select(x => x.InnerText.ToLower().Trim())
+            .Where(x => !string.IsNullOrEmpty(x))
+            .ToList();
+
+        var indexes = this.OlympediaService.FindIndexes(headers);
+
+        return indexes;
     }
 
     private string ConvertEventPrefix(string gender)
