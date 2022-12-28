@@ -14,6 +14,7 @@ public class ConverterManager
 	private readonly EventConverter olympediaEventConverter;
 	private readonly AthleteConverter olympediaAtheleteConverter;
 	private readonly ParticipantConverter olympediaParticipantConverter;
+	private readonly StandingConverter olympediaStandingConverter;
 
 	public ConverterManager(WorldCountryConverter worldCountryConverter,
 		NOCConverter olympediaNOCConverter,
@@ -22,7 +23,8 @@ public class ConverterManager
 		VenueConverter olympediaVenueConverter,
 		EventConverter olympediaEventConverter,
 		AthleteConverter olympediaAtheleteConverter,
-		ParticipantConverter olympediaParticipantConverter)
+		ParticipantConverter olympediaParticipantConverter,
+		StandingConverter olympediaStandingConverter)
 	{
 		this.worldCountryConverter = worldCountryConverter;
 		this.olympediaNOCConverter = olympediaNOCConverter;
@@ -32,6 +34,7 @@ public class ConverterManager
 		this.olympediaEventConverter = olympediaEventConverter;
 		this.olympediaAtheleteConverter = olympediaAtheleteConverter;
 		this.olympediaParticipantConverter = olympediaParticipantConverter;
+		this.olympediaStandingConverter = olympediaStandingConverter;
 	}
 
 	public async Task RunWorldCountriesConverters()
@@ -47,6 +50,7 @@ public class ConverterManager
 		//await this.olympediaVenueConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_VENUE_CONVERTER);
 		//await this.olympediaEventConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
 		//await this.olympediaAtheleteConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_ATHELETE_CONVERTER);
-		await this.olympediaParticipantConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
+		//await this.olympediaParticipantConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
+		await this.olympediaStandingConverter.ConvertAsync(ConverterConstants.OLYMPEDIA_RESULT_CONVERTER);
 	}
 }
