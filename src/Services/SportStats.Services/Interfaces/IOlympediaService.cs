@@ -1,5 +1,7 @@
 ﻿namespace SportStats.Services.Interfaces;
 
+using SportStats.Data.Models.Enumerations;
+
 public interface IOlympediaService
 {
     IList<int> FindAthleteNumbers(string text);
@@ -11,4 +13,8 @@ public interface IOlympediaService
     int FindAthleteNumber(string text);
 
     string FindCountryCode(string text);
+
+    Dictionary<string, int> FindIndexes(List<string> headers);
+
+    MedalType FindMedal(string text);
 }
