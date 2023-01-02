@@ -15,8 +15,8 @@ public class VenueConverter : BaseOlympediaConverter
     private readonly IVenuesService venuesService;
 
     public VenueConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IVenuesService venuesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService, IVenuesService venuesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService, olympediaService)
     {
         this.venuesService = venuesService;
     }
