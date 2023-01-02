@@ -17,9 +17,9 @@ public class SportDisciplineConverter : BaseOlympediaConverter
     private readonly IDisciplinesService disciplinesService;
 
     public SportDisciplineConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService,
-        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, ISportsService sportsService,
-        IDisciplinesService disciplinesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
+        IZipService zipService, IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService,
+        ISportsService sportsService, IDisciplinesService disciplinesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService, olympediaService)
     {
         this.sportsService = sportsService;
         this.disciplinesService = disciplinesService;
