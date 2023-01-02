@@ -11,4 +11,8 @@ public class GameCacheModel : IMapFrom<OGGame>
     public int Year { get; set; }
 
     public OlympicGameType Type { get; set; }
+
+    public DateTime? OpenDate { get; set; }
+
+    public DateTime? StartCompetitionDate { get; set; }
 }
