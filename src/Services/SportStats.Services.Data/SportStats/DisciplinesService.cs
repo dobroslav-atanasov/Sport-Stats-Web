@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using global::SportStats.Data.Contexts;
-using global::SportStats.Data.Models.Cache;
+using global::SportStats.Data.Models.Cache.OlympicGames;
 using global::SportStats.Data.Models.Entities.SportStats;
 using global::SportStats.Services.Data.SportStats.Interfaces;
 using global::SportStats.Services.Mapper.Extensions;
@@ -35,12 +35,12 @@ public class DisciplinesService : BaseSportStatsService, IDisciplinesService
         return discipline;
     }
 
-    public ICollection<OGDisciplineCacheModel> GetOGDisciplinesCache()
+    public ICollection<DisciplineCacheModel> GetDisciplineCacheModels()
     {
         var disciplines = this.Context
             .OGDisciplines
             .AsNoTracking()
-            .To<OGDisciplineCacheModel>()
+            .To<DisciplineCacheModel>()
             .ToList();
 
         return disciplines;
