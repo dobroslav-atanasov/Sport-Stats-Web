@@ -1,14 +1,16 @@
 ﻿namespace SportStats.Services.Data.SportStats.Interfaces;
 
-using global::SportStats.Data.Models.Cache;
+using global::SportStats.Data.Models.Cache.OlympicGames;
 
 public interface IDataCacheService
 {
-    ICollection<OGCountryCacheModel> OGCountriesCache { get; }
+    ICollection<CountryCacheModel> CountryCacheModels { get; }
 
-    ICollection<OGDisciplineCacheModel> OGDisciplinesCache { get; }
+    ICollection<DisciplineCacheModel> DisciplineCacheModels { get; }
 
-    ICollection<OGGameCacheModel> OGGamesCache { get; }
+    ICollection<GameCacheModel> GameCacheModels { get; }
 
-    ICollection<OGVenueCacheModel> OGVenuesCache { get; }
+    ICollection<VenueCacheModel> VenueCacheModels { get; }
+
+    ICollection<EventCacheModel> EventCacheModels { get; }
 }
