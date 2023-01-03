@@ -9,6 +9,11 @@ using global::SportStats.Data.Models.Entities.Interfaces;
 [Table("OlympicGames_Venues", Schema = "dbo")]
 public class OGVenue : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGVenue>
 {
+    public OGVenue()
+    {
+        this.EventVenues = new HashSet<OGEventVenue>();
+    }
+
     [Required]
     public int Number { get; set; }
 
@@ -43,6 +48,8 @@ public class OGVenue : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpd
     public bool IsDeleted { get; set; }
 
     public DateTime? DeletedOn { get; set; }
+
+    public virtual ICollection<OGEventVenue> EventVenues { get; set; }
 
     public bool Update(OGVenue other)
     {
