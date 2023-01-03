@@ -10,6 +10,11 @@ using global::SportStats.Data.Models.Enumerations;
 [Table("OlympicGames_Games", Schema = "dbo")]
 public class OGGame : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGGame>
 {
+    public OGGame()
+    {
+        this.Events = new HashSet<OGEvent>();
+    }
+
     [Required]
     public int Year { get; set; }
 
@@ -80,6 +85,8 @@ public class OGGame : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpda
     public bool IsDeleted { get; set; }
 
     public DateTime? DeletedOn { get; set; }
+
+    public virtual ICollection<OGEvent> Events { get; set; }
 
     public bool Update(OGGame other)
     {
