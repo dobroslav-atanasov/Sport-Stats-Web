@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 using global::SportStats.Data.Models.Entities.Interfaces;
+using global::SportStats.Data.Models.Enumerations;
 
 [Table("OlympicGames_Teams", Schema = "dbo")]
 public class OGTeam : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGTeam>
@@ -29,6 +30,8 @@ public class OGTeam : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpda
     public int? CoachId { get; set; }
     public virtual OGAthlete Coach { get; set; }
 
+    public MedalType Medal { get; set; } = MedalType.None;
+
     public DateTime CreatedOn { get; set; }
 
     public DateTime? ModifiedOn { get; set; }
@@ -52,6 +55,12 @@ public class OGTeam : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpda
         if (this.CountryName != other.CountryName)
         {
             this.CountryName = other.CountryName;
+            isUpdated = true;
+        }
+
+        if (this.Medal != other.Medal)
+        {
+            this.Medal = other.Medal;
             isUpdated = true;
         }
 
