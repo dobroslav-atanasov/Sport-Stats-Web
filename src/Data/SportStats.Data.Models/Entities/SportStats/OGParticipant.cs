@@ -1,12 +1,19 @@
 ﻿namespace SportStats.Data.Models.Entities.SportStats;
 
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 using global::SportStats.Data.Models.Entities.Interfaces;
+using global::SportStats.Data.Models.Enumerations;
 
 [Table("OlympicGames_Participants", Schema = "dbo")]
-public class OGParticipant : BaseEntity<int>, IUpdatable<OGParticipant>
+public class OGParticipant : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGParticipant>
 {
+    public OGParticipant()
+    {
+        this.Squads = new HashSet<OGSquad>();
+    }
+
     public int AthleteId { get; set; }
     public virtual OGAthlete Athlete { get; set; }
 
@@ -19,8 +26,22 @@ public class OGParticipant : BaseEntity<int>, IUpdatable<OGParticipant>
 
     public int? AgeDays { get; set; }
 
+    public MedalType Medal { get; set; } = MedalType.None;
+
     [NotMapped]
     public int OlympediaNumber { get; set; }
+
+    public bool IsCoach { get; set; } = false;
+
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedOn { get; set; }
+
+    public virtual ICollection<OGSquad> Squads { get; set; }
 
     public bool Update(OGParticipant other)
     {
@@ -41,6 +62,12 @@ public class OGParticipant : BaseEntity<int>, IUpdatable<OGParticipant>
         if (this.AgeDays != other.AgeDays)
         {
             this.AgeDays = other.AgeDays;
+            isUpdated = true;
+        }
+
+        if (this.Medal != other.Medal)
+        {
+            this.Medal = other.Medal;
             isUpdated = true;
         }
 
