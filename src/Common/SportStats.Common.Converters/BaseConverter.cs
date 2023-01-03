@@ -71,7 +71,7 @@ public abstract class BaseConverter
                 {
                     this.Logger.LogError(ex, $"Group was not process: {identifier};");
                 }
-            }, maxDegreeOfParallelism: 1);
+            }, maxDegreeOfParallelism: 10);
         }
         catch (Exception ex)
         {
