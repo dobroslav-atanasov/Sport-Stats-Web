@@ -9,6 +9,13 @@ using global::SportStats.Data.Models.Entities.Interfaces;
 [Table("OlympicGames_Countries", Schema = "dbo")]
 public class OGCountry : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGCountry>
 {
+    public OGCountry()
+    {
+        this.AthleteCountries = new HashSet<OGAthleteCountry>();
+        this.Games = new HashSet<OGGame>();
+        this.Teams = new HashSet<OGTeam>();
+    }
+
     [Required]
     [MaxLength(50)]
     public string CountryName { get; set; }
@@ -49,6 +56,12 @@ public class OGCountry : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IU
     public bool IsDeleted { get; set; }
 
     public DateTime? DeletedOn { get; set; }
+
+    public virtual ICollection<OGAthleteCountry> AthleteCountries { get; set; }
+
+    public virtual ICollection<OGGame> Games { get; set; }
+
+    public virtual ICollection<OGTeam> Teams { get; set; }
 
     public bool Update(OGCountry other)
     {

@@ -8,6 +8,11 @@ using global::SportStats.Data.Models.Entities.Interfaces;
 [Table("OlympicGames_Disciplines", Schema = "dbo")]
 public class OGDiscipline : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGDiscipline>
 {
+    public OGDiscipline()
+    {
+        this.Events = new HashSet<OGEvent>();
+    }
+
     [Required]
     [MaxLength(100)]
     public string Name { get; set; }
@@ -26,6 +31,8 @@ public class OGDiscipline : BaseEntity<int>, ICreatableEntity, IDeletableEntity,
     public bool IsDeleted { get; set; }
 
     public DateTime? DeletedOn { get; set; }
+
+    public virtual ICollection<OGEvent> Events { get; set; }
 
     public bool Update(OGDiscipline other)
     {

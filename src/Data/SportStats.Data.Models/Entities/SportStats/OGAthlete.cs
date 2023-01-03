@@ -9,6 +9,13 @@ using global::SportStats.Data.Models.Enumerations;
 [Table("OlympicGames_Athletes", Schema = "dbo")]
 public class OGAthlete : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IUpdatable<OGAthlete>
 {
+    public OGAthlete()
+    {
+        this.AthleteCountries = new HashSet<OGAthleteCountry>();
+        this.Participants = new HashSet<OGParticipant>();
+        this.Teams = new HashSet<OGTeam>();
+    }
+
     [Required]
     [Column(TypeName = "UNIQUEIDENTIFIER")]
     public Guid Identifier { get; set; }
@@ -62,6 +69,12 @@ public class OGAthlete : BaseEntity<int>, ICreatableEntity, IDeletableEntity, IU
     public bool IsDeleted { get; set; }
 
     public DateTime? DeletedOn { get; set; }
+
+    public virtual ICollection<OGAthleteCountry> AthleteCountries { get; set; }
+
+    public virtual ICollection<OGParticipant> Participants { get; set; }
+
+    public virtual ICollection<OGTeam> Teams { get; set; }
 
     public bool Update(OGAthlete other)
     {
