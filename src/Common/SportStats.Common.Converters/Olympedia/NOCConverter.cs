@@ -15,8 +15,9 @@ public class NOCConverter : BaseOlympediaConverter
     private readonly ICountriesService countriesService;
 
     public NOCConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, ICountriesService countriesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService,
+        ICountriesService countriesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService, olympediaService)
     {
         this.countriesService = countriesService;
     }

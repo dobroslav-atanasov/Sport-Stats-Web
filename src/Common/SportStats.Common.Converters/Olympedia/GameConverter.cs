@@ -17,8 +17,8 @@ public class GameConverter : BaseOlympediaConverter
     private readonly IGamesService gamesService;
 
     public GameConverter(ILogger<BaseConverter> logger, ICrawlersService crawlersService, ILogsService logsService, IGroupsService groupsService, IZipService zipService,
-        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IGamesService gamesService)
-        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService)
+        IRegexService regexService, IDataCacheService dataCacheService, INormalizeService normalizeService, IOlympediaService olympediaService, IGamesService gamesService)
+        : base(logger, crawlersService, logsService, groupsService, zipService, regexService, dataCacheService, normalizeService, olympediaService)
     {
         this.gamesService = gamesService;
     }
@@ -47,7 +47,7 @@ public class GameConverter : BaseOlympediaConverter
                 if (hostCityMatch != null)
                 {
                     game.HostCity = this.NormalizeService.NormalizeHostCityName(hostCityMatch.Groups[1].Value.Trim());
-                    var country = this.DataCacheService.OGCountriesCache.FirstOrDefault(c => c.Name == hostCityMatch.Groups[2].Value.Trim());
+                    var country = this.DataCacheService.CountryCacheModels.FirstOrDefault(c => c.Name == hostCityMatch.Groups[2].Value.Trim());
                     game.HostCountryId = country.Id;
                     game.OfficialName = this.SetOfficialName(game.HostCity, game.Year);
                 }
