@@ -156,6 +156,7 @@ public class Program
         services.AddTransient<EventConverter>();
         services.AddTransient<AthleteConverter>();
         services.AddTransient<ParticipantConverter>();
+        services.AddTransient<AdditionalConverter>();
 
         var serviceProvider = services.BuildServiceProvider();
         return serviceProvider;
