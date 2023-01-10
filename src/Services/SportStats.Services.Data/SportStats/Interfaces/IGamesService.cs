@@ -9,4 +9,6 @@ public interface IGamesService : IAddable, IUpdatable
     Task<OGGame> GetGameAsync(int year, OlympicGameType type);
 
     ICollection<GameCacheModel> GetGameCacheModels();
+
+    IEnumerable<OGGame> GetGames();
 }
